@@ -23,20 +23,18 @@ public partial class Game : Singleton<Game>
     [OnReadyGet] private DiceIndicator _diceIndicator;
     [OnReadyGet] private Camera _camera;
     [OnReadyGet] private CanvasLayer _canvas;
+    [OnReadyGet] private Label _turnsCounter;
     
     private List<Enemy> _enemies = new List<Enemy>();
     private int _turnCounter;
     private bool _gameOver;
+    private int _lastSpawnedPickup;
 
     [OnReady]
     private void Ready()
     {
         _dice.OnDestroyed += OnGridObjectDestroyed;
         _dice.OnDamaged += OnGridObjectDamaged;
-    
-        ModPickup bulletPickup = ModManager.Instance.ModPickupScenes[ModManager.ModTypes.Bullet].Instance<ModPickup>();
-        AddChild(bulletPickup);
-        bulletPickup.Init(new Vector2(16, 16), ModManager.ModTypes.Bullet);
 
         Utils.RNG.Seed = (ulong) DateTime.Now.Millisecond;
     }
@@ -55,12 +53,19 @@ public partial class Game : Singleton<Game>
         DoTurn?.Invoke(); // evaluate enemy movement and attacks
         DoPostTurn?.Invoke(); // evaluate enemy destroyed
         
+        _turnCounter++;
+
+        _turnsCounter.Text = $"{_turnCounter}";
+        
+        if (_turnCounter == 1)
+        {
+            TrySpawnPickup(new Vector2(16, 16));
+        }
+        
         if (_turnCounter % 3 == 0)
         {
             SpawnEnemy();
         }
-        
-        _turnCounter++;
     }
 
     private void SpawnEnemy()
@@ -76,7 +81,7 @@ public partial class Game : Singleton<Game>
             _ => pos
         };
 
-        pos = new Vector2(15, 15);
+        //pos = new Vector2(15, 15);
 
         Enemy enemy = _enemyScenes[0].Instance<Enemy>();
         AddChild(enemy);
@@ -84,6 +89,53 @@ public partial class Game : Singleton<Game>
         enemy.Init(pos);
         enemy.OnDestroyed += OnGridObjectDestroyed;
         enemy.OnDamaged += OnGridObjectDamaged;
+    }
+
+    private void TrySpawnPickup(Vector2 gridPos)
+    {
+        int spawn = 1;
+        if (_turnCounter >= spawn && _lastSpawnedPickup < spawn)
+        {
+            SpawnPickup(gridPos);
+        }
+        
+        spawn = 10;
+        if (_turnCounter >= spawn && _lastSpawnedPickup < spawn)
+        {
+            SpawnPickup(gridPos);
+        }
+        
+        spawn = 30;
+        if (_turnCounter >= spawn && _lastSpawnedPickup < spawn)
+        {
+            SpawnPickup(gridPos);
+        }
+        
+        spawn = 70;
+        if (_turnCounter >= spawn && _lastSpawnedPickup < spawn)
+        {
+            SpawnPickup(gridPos);
+        }
+        
+        spawn = 110;
+        if (_turnCounter >= spawn && _lastSpawnedPickup < spawn)
+        {
+            SpawnPickup(gridPos);
+        }
+        
+        spawn = 160;
+        if (_turnCounter >= spawn && _lastSpawnedPickup < spawn)
+        {
+            SpawnPickup(gridPos);
+        }
+    }
+
+    private void SpawnPickup(Vector2 gridPos)
+    {
+        ModPickup bulletPickup = ModManager.Instance.ModPickupScenes[ModManager.ModTypes.Bullet].Instance<ModPickup>();
+        AddChild(bulletPickup);
+        bulletPickup.Init(gridPos, ModManager.ModTypes.Bullet);
+        _lastSpawnedPickup = _turnCounter;
     }
 
     public Vector3 GridToWorld(Vector2 gridPos)
@@ -113,6 +165,7 @@ public partial class Game : Singleton<Game>
         if (obj is Enemy enemy)
         {
             _enemies.Remove(enemy);
+            TrySpawnPickup(obj.GridPos);
         }
 
         if (obj is Dice)

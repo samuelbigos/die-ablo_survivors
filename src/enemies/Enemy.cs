@@ -13,10 +13,12 @@ public partial class Enemy : GridObject
 
     protected override void DoTurn()
     {
+        base.DoTurn();
+        
         if (_attacking)
             return;
 
-        if (_queueDestroy)
+        if (_queueDestroy || _health <= 0)
             return;
 
         _turnCount++;

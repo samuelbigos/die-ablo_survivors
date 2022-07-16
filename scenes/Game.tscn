@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://scenes/Dice.tscn" type="PackedScene" id=1]
 [ext_resource path="res://default_env.tres" type="Environment" id=2]
@@ -26,6 +26,10 @@
 [ext_resource path="res://assets/mesh/mods/bullet/flat/6.obj" type="ArrayMesh" id=24]
 [ext_resource path="res://assets/mesh/mods/numbers/flat/6.obj" type="ArrayMesh" id=25]
 [ext_resource path="res://scenes/gui/FloatingText.tscn" type="PackedScene" id=26]
+[ext_resource path="res://assets/gui/circle.png" type="Texture" id=27]
+[ext_resource path="res://src/gui/Health.cs" type="Script" id=28]
+[ext_resource path="res://assets/theme.tres" type="Theme" id=29]
+[ext_resource path="res://assets/gui/rounded_rect.png" type="Texture" id=30]
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_unshaded = true
@@ -43,6 +47,7 @@ DicePath = NodePath("Dice")
 DiceIndicatorPath = NodePath("DiceIndicator")
 CameraPath = NodePath("Camera")
 CanvasPath = NodePath("CanvasLayer")
+TurnsCounterPath = NodePath("CanvasLayer/Control/TurnsContainer/MarginContainer/Turns")
 _startScene = "res://scenes/gui/StartScreen.tscn"
 GridSize = Vector2( 20, 20 )
 _enemyScenes = [ ExtResource( 5 ) ]
@@ -53,10 +58,10 @@ script = ExtResource( 8 )
 
 [node name="ModManager" type="Node" parent="."]
 script = ExtResource( 11 )
-_numberColour = Color( 0.443137, 0.443137, 0.443137, 1 )
+_numberColour = Color( 0.329412, 0.329412, 0.329412, 1 )
 _numberColourSecondary = Color( 1, 1, 1, 1 )
-_bulletColour = Color( 0.760784, 0.129412, 0.129412, 1 )
-_bulletColourSecondary = Color( 0.956863, 0.815686, 0.815686, 1 )
+_bulletColour = Color( 0.54902, 0.14902, 0.109804, 1 )
+_bulletColourSecondary = Color( 0.909804, 0.254902, 0.254902, 1 )
 _bulletScene = ExtResource( 10 )
 BulletParticles = ExtResource( 13 )
 
@@ -120,8 +125,129 @@ material/0 = null
 
 [node name="Dice" parent="." instance=ExtResource( 1 )]
 material_override = SubResource( 2 )
-_maxHealth = 10
 _start = Vector2( 18, 18 )
 _indicatorPath = NodePath("../DiceIndicator")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="HealthContainer" type="MarginContainer" parent="CanvasLayer/Control"]
+modulate = Color( 0.423529, 0.815686, 0.4, 1 )
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -42.0
+margin_right = 366.0
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="Health" type="HBoxContainer" parent="CanvasLayer/Control/HealthContainer"]
+margin_left = 10.0
+margin_right = 366.0
+margin_bottom = 32.0
+script = ExtResource( 28 )
+
+[node name="0" type="TextureRect" parent="CanvasLayer/Control/HealthContainer/Health"]
+visible = false
+margin_right = 32.0
+margin_bottom = 32.0
+texture = ExtResource( 27 )
+stretch_mode = 1
+
+[node name="1" type="TextureRect" parent="CanvasLayer/Control/HealthContainer/Health"]
+visible = false
+margin_right = 32.0
+margin_bottom = 32.0
+texture = ExtResource( 27 )
+
+[node name="2" type="TextureRect" parent="CanvasLayer/Control/HealthContainer/Health"]
+visible = false
+margin_right = 32.0
+margin_bottom = 32.0
+texture = ExtResource( 27 )
+
+[node name="3" type="TextureRect" parent="CanvasLayer/Control/HealthContainer/Health"]
+visible = false
+margin_right = 32.0
+margin_bottom = 32.0
+texture = ExtResource( 27 )
+
+[node name="4" type="TextureRect" parent="CanvasLayer/Control/HealthContainer/Health"]
+visible = false
+margin_right = 32.0
+margin_bottom = 32.0
+texture = ExtResource( 27 )
+
+[node name="5" type="TextureRect" parent="CanvasLayer/Control/HealthContainer/Health"]
+visible = false
+margin_right = 32.0
+margin_bottom = 32.0
+texture = ExtResource( 27 )
+
+[node name="6" type="TextureRect" parent="CanvasLayer/Control/HealthContainer/Health"]
+visible = false
+margin_right = 32.0
+margin_bottom = 32.0
+texture = ExtResource( 27 )
+
+[node name="7" type="TextureRect" parent="CanvasLayer/Control/HealthContainer/Health"]
+visible = false
+margin_right = 32.0
+margin_bottom = 32.0
+texture = ExtResource( 27 )
+
+[node name="8" type="TextureRect" parent="CanvasLayer/Control/HealthContainer/Health"]
+visible = false
+margin_left = 36.0
+margin_right = 68.0
+margin_bottom = 32.0
+texture = ExtResource( 27 )
+
+[node name="9" type="TextureRect" parent="CanvasLayer/Control/HealthContainer/Health"]
+visible = false
+margin_right = 32.0
+margin_bottom = 32.0
+texture = ExtResource( 27 )
+
+[node name="TurnsContainer" type="MarginContainer" parent="CanvasLayer/Control"]
+margin_right = 40.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/TurnsContainer"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 32.0
+margin_bottom = 41.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 30 )
+expand = true
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control/TurnsContainer"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 32.0
+margin_bottom = 41.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 1
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 1
+
+[node name="Turns" type="Label" parent="CanvasLayer/Control/TurnsContainer/MarginContainer"]
+margin_left = 5.0
+margin_top = 1.0
+margin_right = 17.0
+margin_bottom = 30.0
+theme = ExtResource( 29 )
+custom_colors/font_color = Color( 0.172549, 0.172549, 0.172549, 1 )
+text = "0"
+align = 1
+valign = 1

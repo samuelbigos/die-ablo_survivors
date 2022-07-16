@@ -61,7 +61,7 @@ public partial class DiceIndicator : Spatial
 
         for (int i = 0; i < 4; i++)
         {
-            _shaders[i].SetShaderParam("u_col", ModManager.Instance.ModColours[types[i]]);
+            _shaders[i].SetShaderParam("u_col", ModManager.Instance.ModColoursSecondary[types[i]]);
         }
     }
 }

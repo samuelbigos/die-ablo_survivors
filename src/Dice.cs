@@ -16,6 +16,8 @@ public partial class Dice : GridObject
     [OnReadyGet] private Camera _camera;
 
     public float MoveTime => _moveTime;
+    public float MaxHealth => _maxHealth;
+    public float Health => _health;
 
     private DiceIndicator _indicator;
     private Queue<Vector2> _moves = new Queue<Vector2>();

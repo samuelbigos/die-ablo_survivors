@@ -70,7 +70,7 @@ public class ModDice : Node
         SpatialMaterial mat = bulletParticles.MaterialOverride as SpatialMaterial;
         mat = mat.Duplicate(false) as SpatialMaterial;
         bulletParticles.MaterialOverride = mat;
-        mat.AlbedoColor = ModManager.Instance.ModColours[Type];
+        mat.AlbedoColor = ModManager.Instance.ModColoursSecondary[Type];
         
         bulletParticles.Emitting = true;
     }
