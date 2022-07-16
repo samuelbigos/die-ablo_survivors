@@ -5,6 +5,8 @@ using GodotOnReady.Attributes;
 
 public partial class Game : Singleton<Game>
 {
+    [Export] private string _startScene;
+    
     [Export] public Vector2 GridSize = new Vector2(10, 10);
     [Export] public Vector2 CellSize = new Vector2(1, 1);
 
@@ -42,23 +44,23 @@ public partial class Game : Singleton<Game>
     public override void _Process(float delta)
     {
         base._Process(delta);
-        
+
         if (_gameOver)
-            GetTree().ReloadCurrentScene();
+            GetTree().ChangeScene(_startScene);
     }
 
     public void TriggerTurn()
     {
+        DoPreTurn?.Invoke(); // evaluate the dice move and resulting actions
+        DoTurn?.Invoke(); // evaluate enemy movement and attacks
+        DoPostTurn?.Invoke(); // evaluate enemy destroyed
+        
         if (_turnCounter % 3 == 0)
         {
             SpawnEnemy();
         }
         
         _turnCounter++;
-        
-        DoPreTurn?.Invoke(); // evaluate the dice move and resulting actions
-        DoTurn?.Invoke(); // evaluate enemy movement and attacks
-        DoPostTurn?.Invoke(); // evaluate enemy destroyed
     }
 
     private void SpawnEnemy()
@@ -74,10 +76,12 @@ public partial class Game : Singleton<Game>
             _ => pos
         };
 
+        pos = new Vector2(15, 15);
+
         Enemy enemy = _enemyScenes[0].Instance<Enemy>();
         AddChild(enemy);
-        enemy.Init(pos);
         _enemies.Add(enemy);
+        enemy.Init(pos);
         enemy.OnDestroyed += OnGridObjectDestroyed;
         enemy.OnDamaged += OnGridObjectDamaged;
     }

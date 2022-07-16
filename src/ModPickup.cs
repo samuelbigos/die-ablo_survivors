@@ -35,7 +35,13 @@ public partial class ModPickup : Spatial
         {
             Dice.Instance.OnPickup(this);
             QueueFree();
-            Game.DoTurn -= DoTurn;
         }
+    }
+
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+        
+        Game.DoTurn -= DoTurn;
     }
 }

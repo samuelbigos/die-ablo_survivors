@@ -43,6 +43,7 @@ DicePath = NodePath("Dice")
 DiceIndicatorPath = NodePath("DiceIndicator")
 CameraPath = NodePath("Camera")
 CanvasPath = NodePath("CanvasLayer")
+_startScene = "res://scenes/gui/StartScreen.tscn"
 GridSize = Vector2( 20, 20 )
 _enemyScenes = [ ExtResource( 5 ) ]
 _floatingText = ExtResource( 26 )

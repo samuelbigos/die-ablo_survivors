@@ -40,10 +40,7 @@ public partial class GridObject : MeshInstance
         _defaultMaterial.AlbedoColor = _color;
         
         _health = _maxHealth;
-        
-        _baseY = Game.Instance.GridToWorld(_gridPos).y;
-        this.GlobalPosition(Game.Instance.GridToWorld(_gridPos) + Vector3.Up * 100.0f);
-        
+
         Game.DoPreTurn += DoPreTurn;
         Game.DoTurn += DoTurn;
         Game.DoPostTurn += DoPostTurn;
@@ -70,7 +67,8 @@ public partial class GridObject : MeshInstance
     public void Init(Vector2 gridPos)
     {
         _gridPos = gridPos;
-        GlobalTransform = new Transform(GlobalTransform.basis, _gridPos.To3D());
+        _baseY = Game.Instance.GridToWorld(_gridPos).y;
+        this.GlobalPosition(Game.Instance.GridToWorld(_gridPos) + Vector3.Up * 100.0f);
     }
 
     public override void _Process(float delta)
@@ -124,6 +122,14 @@ public partial class GridObject : MeshInstance
     {
         OnDestroyed?.Invoke(this);
         _queueDestroy = true;
+    }
+
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+        
+        Game.DoPreTurn -= DoPreTurn;
         Game.DoTurn -= DoTurn;
+        Game.DoPostTurn -= DoPostTurn;
     }
 }

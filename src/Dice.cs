@@ -37,6 +37,7 @@ public partial class Dice : GridObject
     protected override void Ready()
     {
         _gridPos = _start;
+        this.GlobalPosition(Game.Instance.GridToWorld(_gridPos) + Vector3.Up * 100.0f);
         
         base.Ready();
 
