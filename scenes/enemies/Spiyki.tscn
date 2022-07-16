@@ -11,3 +11,4 @@ mesh = ExtResource( 3 )
 material/0 = null
 script = ExtResource( 2 )
 _color = Color( 1, 0, 0, 1 )
+_damage = 2

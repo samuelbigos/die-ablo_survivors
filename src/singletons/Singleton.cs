@@ -14,4 +14,11 @@ public class Singleton<T> : Node where T : class
         Debug.Assert(Instance == null, $"Attempting to create multiple {typeof(T)} instances!");
         _instance = this;
     }
+    
+    public override void _ExitTree()
+    {
+        base._EnterTree();
+
+        _instance = null;
+    }
 }

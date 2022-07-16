@@ -7,23 +7,31 @@ public class ModDice : Node
     public ModManager.ModTypes Type;
     public int Face;
 
+    public ModDice(ModManager.ModTypes type, int face)
+    {
+        Type = type;
+        Face = face;
+    }
+
     public void Activate(Vector2 pos, Vector2 forward)
     {
         switch (Type)
         {
+            case ModManager.ModTypes.Number:
+                break;
             case ModManager.ModTypes.Bullet:
                 Activate_Bullet(pos, forward);
                 break;
-            case ModManager.ModTypes.Laser:
-                break;
-            case ModManager.ModTypes.Health:
-                break;
-            case ModManager.ModTypes.Coin:
-                break;
-            case ModManager.ModTypes.Freeze:
-                break;
-            case ModManager.ModTypes.Explode:
-                break;
+            // case ModManager.ModTypes.Laser:
+            //     break;
+            // case ModManager.ModTypes.Health:
+            //     break;
+            // case ModManager.ModTypes.Coin:
+            //     break;
+            // case ModManager.ModTypes.Freeze:
+            //     break;
+            // case ModManager.ModTypes.Explode:
+            //     break;
             default:
                 throw new ArgumentOutOfRangeException();
         }

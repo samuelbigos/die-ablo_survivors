@@ -29,4 +29,9 @@ public static class Utils
     {
         return 1 - Mathf.Pow(1 - x, 3);
     }
+    
+    public static float EaseInCubic(float x)
+    {
+        return 4 * x * x * x;
+    }
 }

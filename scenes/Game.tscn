@@ -1,16 +1,31 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://scenes/Dice.tscn" type="PackedScene" id=1]
 [ext_resource path="res://default_env.tres" type="Environment" id=2]
 [ext_resource path="res://src/singletons/Game.cs" type="Script" id=3]
+[ext_resource path="res://assets/mesh/mods/bullet/flat/1.obj" type="ArrayMesh" id=4]
 [ext_resource path="res://scenes/enemies/Spiyki.tscn" type="PackedScene" id=5]
 [ext_resource path="res://assets/mesh/grid.obj" type="ArrayMesh" id=6]
+[ext_resource path="res://assets/mats/dice_indicator.material" type="Material" id=7]
 [ext_resource path="res://src/singletons/Pathfinding.cs" type="Script" id=8]
 [ext_resource path="res://assets/mats/grid.material" type="Material" id=9]
 [ext_resource path="res://scenes/mods/ModPickup_Bullet.tscn" type="PackedScene" id=10]
 [ext_resource path="res://src/singletons/ModManager.cs" type="Script" id=11]
 [ext_resource path="res://src/singletons/Resources.cs" type="Script" id=12]
 [ext_resource path="res://scenes/mods/particles/BulletParticles.tscn" type="PackedScene" id=13]
+[ext_resource path="res://src/DiceIndicator.cs" type="Script" id=14]
+[ext_resource path="res://assets/mesh/mods/numbers/flat/1.obj" type="ArrayMesh" id=15]
+[ext_resource path="res://assets/mesh/mods/numbers/flat/5.obj" type="ArrayMesh" id=16]
+[ext_resource path="res://assets/mesh/mods/numbers/flat/3.obj" type="ArrayMesh" id=17]
+[ext_resource path="res://assets/mesh/mods/bullet/flat/3.obj" type="ArrayMesh" id=18]
+[ext_resource path="res://assets/mesh/mods/numbers/flat/2.obj" type="ArrayMesh" id=19]
+[ext_resource path="res://assets/mesh/mods/numbers/flat/4.obj" type="ArrayMesh" id=20]
+[ext_resource path="res://assets/mesh/mods/bullet/flat/2.obj" type="ArrayMesh" id=21]
+[ext_resource path="res://assets/mesh/mods/bullet/flat/4.obj" type="ArrayMesh" id=22]
+[ext_resource path="res://assets/mesh/mods/bullet/flat/5.obj" type="ArrayMesh" id=23]
+[ext_resource path="res://assets/mesh/mods/bullet/flat/6.obj" type="ArrayMesh" id=24]
+[ext_resource path="res://assets/mesh/mods/numbers/flat/6.obj" type="ArrayMesh" id=25]
+[ext_resource path="res://scenes/gui/FloatingText.tscn" type="PackedScene" id=26]
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_unshaded = true
@@ -25,8 +40,12 @@ clearcoat_gloss = 1.0
 [node name="Game" type="Spatial"]
 script = ExtResource( 3 )
 DicePath = NodePath("Dice")
+DiceIndicatorPath = NodePath("DiceIndicator")
+CameraPath = NodePath("Camera")
+CanvasPath = NodePath("CanvasLayer")
 GridSize = Vector2( 20, 20 )
 _enemyScenes = [ ExtResource( 5 ) ]
+_floatingText = ExtResource( 26 )
 
 [node name="Pathfinding" type="Node" parent="."]
 script = ExtResource( 8 )
@@ -34,7 +53,9 @@ script = ExtResource( 8 )
 [node name="ModManager" type="Node" parent="."]
 script = ExtResource( 11 )
 _numberColour = Color( 0.443137, 0.443137, 0.443137, 1 )
-_bulletColour = Color( 0.76, 0.1292, 0.1292, 1 )
+_numberColourSecondary = Color( 1, 1, 1, 1 )
+_bulletColour = Color( 0.760784, 0.129412, 0.129412, 1 )
+_bulletColourSecondary = Color( 0.956863, 0.815686, 0.815686, 1 )
 _bulletScene = ExtResource( 10 )
 BulletParticles = ExtResource( 13 )
 
@@ -43,7 +64,7 @@ script = ExtResource( 12 )
 FlashMaterial = SubResource( 1 )
 
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( 0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 8.27655, 10, 5.1528 )
+transform = Transform( 0.707106, -0.612373, 0.353553, 0, 0.5, 0.866025, -0.707106, -0.612373, 0.353553, 8.27655, 10, 5.1528 )
 environment = ExtResource( 2 )
 projection = 1
 size = 10.0
@@ -62,5 +83,44 @@ material_override = ExtResource( 9 )
 mesh = ExtResource( 6 )
 material/0 = null
 
+[node name="DiceIndicator" type="Spatial" parent="."]
+visible = false
+script = ExtResource( 14 )
+TopPath = NodePath("Top")
+RightPath = NodePath("Right")
+BottomPath = NodePath("Bottom")
+LeftPath = NodePath("Left")
+_numberMeshes = [ ExtResource( 15 ), ExtResource( 19 ), ExtResource( 17 ), ExtResource( 20 ), ExtResource( 16 ), ExtResource( 25 ) ]
+_bulletMeshes = [ ExtResource( 4 ), ExtResource( 21 ), ExtResource( 18 ), ExtResource( 22 ), ExtResource( 23 ), ExtResource( 24 ) ]
+
+[node name="Top" type="MeshInstance" parent="DiceIndicator"]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.5, -1 )
+material_override = ExtResource( 7 )
+mesh = ExtResource( 4 )
+material/0 = null
+
+[node name="Right" type="MeshInstance" parent="DiceIndicator"]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 1, 0.5, 0 )
+material_override = ExtResource( 7 )
+mesh = ExtResource( 4 )
+material/0 = null
+
+[node name="Bottom" type="MeshInstance" parent="DiceIndicator"]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.5, 1 )
+material_override = ExtResource( 7 )
+mesh = ExtResource( 4 )
+material/0 = null
+
+[node name="Left" type="MeshInstance" parent="DiceIndicator"]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -1, 0.5, 0 )
+material_override = ExtResource( 7 )
+mesh = ExtResource( 4 )
+material/0 = null
+
 [node name="Dice" parent="." instance=ExtResource( 1 )]
 material_override = SubResource( 2 )
+_maxHealth = 10
+_start = Vector2( 18, 18 )
+_indicatorPath = NodePath("../DiceIndicator")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]

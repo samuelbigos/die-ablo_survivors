@@ -10,18 +10,26 @@ public partial class Dice : GridObject
     
     [Export] private float _moveTime = 0.25f;
     [Export] private Vector2 _start = new Vector2(5, 5);
+    [Export] private NodePath _indicatorPath;
     
     [OnReadyGet] private Game _game;
     [OnReadyGet] private Camera _camera;
 
     public float MoveTime => _moveTime;
 
+    private DiceIndicator _indicator;
     private Queue<Vector2> _moves = new Queue<Vector2>();
     private Queue<Vector2> _rotations = new Queue<Vector2>();
     private Quat _rotFrom;
     private Quat _rot;
     private Vector2 _forward;
+    
     private int _topFace;
+    private int _bottomFace;
+    private int _rightFace;
+    private int _leftFace;
+    private int _frontFace;
+    private int _backFace;
 
     private Dictionary<int, ModDice> _mods = new();
     private Dictionary<ModManager.ModTypes, List<MeshInstance>> _faces = new();
@@ -31,14 +39,16 @@ public partial class Dice : GridObject
         _gridPos = _start;
         
         base.Ready();
+
+        _indicator = GetNode<DiceIndicator>(_indicatorPath);
         
         _rot = GlobalTransform.basis.RotationQuat();
-        _mods[0] = null;
-        _mods[1] = null;
-        _mods[2] = null;
-        _mods[3] = null;
-        _mods[4] = null;
-        _mods[5] = null;
+        _mods[0] = new ModDice(ModManager.ModTypes.Number, 0);
+        _mods[1] = new ModDice(ModManager.ModTypes.Number, 0);
+        _mods[2] = new ModDice(ModManager.ModTypes.Number, 0);
+        _mods[3] = new ModDice(ModManager.ModTypes.Number, 0);
+        _mods[4] = new ModDice(ModManager.ModTypes.Number, 0);
+        _mods[5] = new ModDice(ModManager.ModTypes.Number, 0);
         
         _instance = this;
 
@@ -46,8 +56,6 @@ public partial class Dice : GridObject
         {
             for (int j = 0; j < (int)ModManager.ModTypes.COUNT; j++)
             {
-                if (j > 1) break; // until i implement others
-                
                 ModManager.ModTypes type = (ModManager.ModTypes) j;
                 if (!_faces.ContainsKey(type))
                     _faces[type] = new List<MeshInstance>();
@@ -59,6 +67,7 @@ public partial class Dice : GridObject
                 mat = mat.Duplicate() as ShaderMaterial; // set unique material so we can change colour
                 mesh.MaterialOverride = mat;
                 mat.SetShaderParam("u_col_1", ModManager.Instance.ModColours[type]);
+                mat.SetShaderParam("u_col_2", ModManager.Instance.ModColoursSecondary[type]);
             }
         }
 
@@ -120,6 +129,11 @@ public partial class Dice : GridObject
                 for (int i = 0; i < 6; i++)
                 {
                     if (FaceDirection(i, rotBasis).y > 0.5f) _topFace = i;
+                    if (FaceDirection(i, rotBasis).y < -0.5f) _bottomFace = i;
+                    if (FaceDirection(i, rotBasis).x > 0.5f) _rightFace = i;
+                    if (FaceDirection(i, rotBasis).x < -0.5f) _leftFace = i;
+                    if (FaceDirection(i, rotBasis).z > 0.5f) _frontFace = i;
+                    if (FaceDirection(i, rotBasis).z < -0.5f) _backFace = i;
                 }
 
                 _game.TriggerTurn();
@@ -141,28 +155,52 @@ public partial class Dice : GridObject
                 _moving = false;
             }
         }
-        
-        _camera.GlobalPosition(GlobalTransform.origin + _camera.GlobalTransform.basis.z.Normalized() * 10.0f);
+
+        Vector3 camPos = GlobalTransform.origin;
+        camPos.y = 0.0f;
+        _camera.GlobalPosition(camPos + _camera.GlobalTransform.basis.z.Normalized() * 10.0f);
+        _indicator.GlobalPosition(GlobalTransform.origin);
     }
 
     protected override void DoPreTurn()
     {
-        int bottom = BottomFace();
-        if (_mods[bottom] != null)
-        {
-            _mods[bottom].Activate(_gridPos, _forward);
-        }
+        base.DoPreTurn();
+        
+        _mods[_bottomFace].Activate(_gridPos, _forward);
     }
 
+    protected override void DoTurn()
+    {
+        base.DoTurn();
+
+        UpdateIndicator();
+    }
+
+    private void UpdateIndicator()
+    {
+        ModManager.ModTypes[] types = new ModManager.ModTypes[4]
+        {
+            _mods[_backFace].Type,
+            _mods[_rightFace].Type,
+            _mods[_frontFace].Type,
+            _mods[_leftFace].Type,
+        };
+        int[] faces = new int[4]
+        {
+            _backFace,
+            _rightFace,
+            _frontFace,
+            _leftFace,
+        };
+        _indicator.UpdateSides(types, faces);
+    }
+    
     public void OnPickup(ModPickup pickup)
     {
-        int face = BottomFace();
+        int face = _bottomFace;
         SetFaceVisible(face, false);
         
-        ModDice mod = new ModDice();
-        mod.Type = pickup.Type;
-        
-        mod.Face = face;
+        ModDice mod = new ModDice(pickup.Type, face);
         mod.Activate(_gridPos, _forward);
         _mods[face] = mod;
         
@@ -171,14 +209,7 @@ public partial class Dice : GridObject
 
     private void SetFaceVisible(int face, bool visible)
     {
-        if (_mods[face] == null)
-        {
-            _faces[ModManager.ModTypes.Number][face].Visible = visible;
-        }
-        else
-        {
-            _faces[_mods[face].Type][face].Visible = visible;
-        }
+        _faces[_mods[face].Type][face].Visible = visible;
     }
     
     private Vector3 FaceDirection(int face, Basis basis)
@@ -200,15 +231,5 @@ public partial class Dice : GridObject
         }
 
         return Vector3.Zero;
-    }
-
-    private int TopFace()
-    {
-        return _topFace;
-    }
-    
-    private int BottomFace()
-    {
-        return 7 - (TopFace() + 1) - 1;
     }
 }

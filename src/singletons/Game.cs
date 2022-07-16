@@ -9,7 +9,8 @@ public partial class Game : Singleton<Game>
     [Export] public Vector2 CellSize = new Vector2(1, 1);
 
     [Export] private List<PackedScene> _enemyScenes;
-
+    [Export] private PackedScene _floatingText;
+    
     public static Action DoPreTurn;
     public static Action DoTurn;
     public static Action DoPostTurn;
@@ -17,20 +18,33 @@ public partial class Game : Singleton<Game>
     public List<Enemy> Enemies => _enemies;
     
     [OnReadyGet] private Dice _dice;
+    [OnReadyGet] private DiceIndicator _diceIndicator;
+    [OnReadyGet] private Camera _camera;
+    [OnReadyGet] private CanvasLayer _canvas;
     
     private List<Enemy> _enemies = new List<Enemy>();
     private int _turnCounter;
+    private bool _gameOver;
 
     [OnReady]
     private void Ready()
     {
         _dice.OnDestroyed += OnGridObjectDestroyed;
+        _dice.OnDamaged += OnGridObjectDamaged;
     
         ModPickup bulletPickup = ModManager.Instance.ModPickupScenes[ModManager.ModTypes.Bullet].Instance<ModPickup>();
         AddChild(bulletPickup);
-        bulletPickup.Init(new Vector2(7, 7), ModManager.ModTypes.Bullet);
+        bulletPickup.Init(new Vector2(16, 16), ModManager.ModTypes.Bullet);
 
         Utils.RNG.Seed = (ulong) DateTime.Now.Millisecond;
+    }
+
+    public override void _Process(float delta)
+    {
+        base._Process(delta);
+        
+        if (_gameOver)
+            GetTree().ReloadCurrentScene();
     }
 
     public void TriggerTurn()
@@ -54,9 +68,9 @@ public partial class Game : Singleton<Game>
         pos = rand4 switch
         {
             0 => new Vector2(0, Utils.RNG.Randi() % GridSize.y),
-            1 => new Vector2(1, Utils.RNG.Randi() % GridSize.y),
+            1 => new Vector2(GridSize.x - 1, Utils.RNG.Randi() % GridSize.y),
             2 => new Vector2(Utils.RNG.Randi() % GridSize.x, 0),
-            3 => new Vector2(Utils.RNG.Randi() % GridSize.x, 1),
+            3 => new Vector2(Utils.RNG.Randi() % GridSize.x, GridSize.y - 1),
             _ => pos
         };
 
@@ -65,6 +79,7 @@ public partial class Game : Singleton<Game>
         enemy.Init(pos);
         _enemies.Add(enemy);
         enemy.OnDestroyed += OnGridObjectDestroyed;
+        enemy.OnDamaged += OnGridObjectDamaged;
     }
 
     public Vector3 GridToWorld(Vector2 gridPos)
@@ -79,6 +94,14 @@ public partial class Game : Singleton<Game>
         if (gridPos.y >= GridSize.y) return false;
         if (gridPos.y < 0) return false;
         return true;
+    }
+    
+    private void OnGridObjectDamaged(GridObject obj, int damage)
+    {
+        FloatingText floatingText = _floatingText.Instance<FloatingText>();
+        _canvas.AddChild(floatingText);
+        string text = obj is Dice ? $"-{damage}" : $"{damage}";
+        floatingText.Init(_camera, obj, text);
     }
     
     private void OnGridObjectDestroyed(GridObject obj)
@@ -96,6 +119,6 @@ public partial class Game : Singleton<Game>
 
     private void GameOver()
     {
-        GetTree().ReloadCurrentScene();
+        _gameOver = true;
     }
 }

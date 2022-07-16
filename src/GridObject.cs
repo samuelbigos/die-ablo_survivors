@@ -7,11 +7,13 @@ public partial class GridObject : MeshInstance
     [Export] private Color _color;
     [Export] private int _damage = 1;
     [Export] private int _maxHealth = 1;
+    [Export] private float _spawnDropTime = 0.5f;
 
     public int Damage => _damage;
     public Vector2 GridPos => _gridPos;
     
     public Action<GridObject> OnDestroyed;
+    public Action<GridObject, int> OnDamaged;
     
     private SpatialMaterial _defaultMaterial;
 
@@ -24,6 +26,10 @@ public partial class GridObject : MeshInstance
     
     private bool _flashing;
     private float _hitFlashTimer;
+    
+    protected bool _justSpawned = true;
+    private float _spawnTimer;
+    private float _baseY;
 
     [OnReady]
     protected virtual void Ready()
@@ -35,11 +41,14 @@ public partial class GridObject : MeshInstance
         
         _health = _maxHealth;
         
-        this.GlobalPosition(Game.Instance.GridToWorld(_gridPos));
+        _baseY = Game.Instance.GridToWorld(_gridPos).y;
+        this.GlobalPosition(Game.Instance.GridToWorld(_gridPos) + Vector3.Up * 100.0f);
         
         Game.DoPreTurn += DoPreTurn;
         Game.DoTurn += DoTurn;
         Game.DoPostTurn += DoPostTurn;
+
+        _spawnTimer = _spawnDropTime;
     }
 
     protected virtual void DoPreTurn()
@@ -85,6 +94,20 @@ public partial class GridObject : MeshInstance
             
             return;
         }
+
+        if (_justSpawned)
+        {
+            _spawnTimer -= delta;
+            float y = _baseY + Mathf.Max(0.0f, Utils.EaseInCubic(_spawnTimer / _spawnDropTime)) * 10.0f;
+            Vector3 pos = GlobalTransform.origin;
+            pos.y = y;
+            GlobalTransform = new Transform(GlobalTransform.basis, pos);
+
+            if (_spawnTimer < 0.0f)
+            {
+                _justSpawned = false;
+            }
+        }
     }
     
     public virtual void OnHit(int damage)
@@ -93,7 +116,8 @@ public partial class GridObject : MeshInstance
         _flashing = true;
         _hitFlashTimer = 1.0f / 10.0f;
         MaterialOverride = Resources.Instance.FlashMaterial;
-        _health -= damage;
+        
+        OnDamaged?.Invoke(this, damage);
     }
 
     protected virtual void Destroy()
