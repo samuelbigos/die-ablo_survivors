@@ -5,9 +5,17 @@ using GodotOnReady.Attributes;
 
 public partial class Dice : MeshInstance
 {
+    public static Dice Instance => _instance;
+    private static Dice _instance;
+    
     [Export] private float _moveTime = 0.25f;
+    [Export] private Vector2 _start = new Vector2(5, 5);
     
     [OnReadyGet] private Game _game;
+    [OnReadyGet] private Camera _camera;
+
+    public Vector2 GridPos => _gridPos;
+    public float MoveTime => _moveTime;
 
     private Queue<Vector2> _moves = new Queue<Vector2>();
     private Queue<Vector2> _rotations = new Queue<Vector2>();
@@ -21,8 +29,12 @@ public partial class Dice : MeshInstance
     [OnReady] 
     private void Ready()
     {
-        this.GlobalPosition(_game.GridToWorld(_gridPos).To3D());
+        _gridPos = _start;
+        this.GlobalPosition(_game.GridToWorld(_gridPos));
+
         _rot = GlobalTransform.basis.RotationQuat();
+
+        _instance = this;
     }
 
     public override void _Process(float delta)
@@ -52,21 +64,27 @@ public partial class Dice : MeshInstance
 
         if (_moves.Count > 0)
         {
-            // apply any incomplete rotation.
-            Basis basis = new Basis(_rot);
-            basis.Scale = GlobalTransform.basis.Scale;
-            GlobalTransform = new Transform(basis, GlobalTransform.origin);
-            
             Vector2 move = _moves.Dequeue();
             Vector2 rot = _rotations.Dequeue();
+            
+            if (_game.InBounds(_gridPos + move))
+            {
+                // apply any incomplete rotation.
+                Basis basis = new Basis(_rot);
+                basis.Scale = GlobalTransform.basis.Scale;
+                GlobalTransform = new Transform(basis, GlobalTransform.origin);
+                
+                _moveStart = _gridPos;
+                _gridPos += move;
+                
+                _moveTimer = _moveTime;
+                _moving = true;
 
-            _moveStart = _gridPos;
-            _gridPos += move;
-            _moveTimer = _moveTime;
-            _moving = true;
+                _rotFrom = GlobalTransform.basis.RotationQuat();
+                _rot = GlobalTransform.basis.Rotated(new Vector3(rot.x, 0.0f, rot.y), Mathf.Pi * 0.5f).RotationQuat();
 
-            _rotFrom = GlobalTransform.basis.RotationQuat();
-            _rot = GlobalTransform.basis.Rotated(new Vector3(rot.x, 0.0f, rot.y), Mathf.Pi * 0.5f).RotationQuat();
+                _game.TriggerTurn();
+            }
         }
 
         if (_moving)
@@ -74,10 +92,10 @@ public partial class Dice : MeshInstance
             _moveTimer = Mathf.Clamp(_moveTimer - delta, 0.0f, 1.0f);
             float t = Utils.EaseOutCubic(1.0f - (_moveTimer / _moveTime));
             
-            Vector2 pos = _moveStart.LinearInterpolate(_gridPos, t);
             Basis rot = new Basis(_rotFrom.Slerp(_rot, t));
             rot.Scale = GlobalTransform.basis.Scale;
-            GlobalTransform = new Transform(rot, pos.To3D());
+            Vector3 pos = _game.GridToWorld(_moveStart).LinearInterpolate(_game.GridToWorld(_gridPos), t);
+            GlobalTransform = new Transform(rot, pos);
             
             if (_moveTimer == 0.0f)
             {
@@ -85,7 +103,7 @@ public partial class Dice : MeshInstance
             }
         }
         
-        GD.Print(TopFace());
+        _camera.GlobalPosition(GlobalTransform.origin + _camera.GlobalTransform.basis.z.Normalized() * 10.0f);
     }
 
     private Vector3 FaceDirection(int face)
@@ -118,5 +136,10 @@ public partial class Dice : MeshInstance
         }
 
         return 0;
+    }
+    
+    private int BottomFace()
+    {
+        return 7 - TopFace();
     }
 }
