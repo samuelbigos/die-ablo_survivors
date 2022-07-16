@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://assets/mat.material" type="Material" id=1]
+[ext_resource path="res://assets/mats/enemy.material" type="Material" id=1]
 [ext_resource path="res://src/enemies/Enemy.cs" type="Script" id=2]
-[ext_resource path="res://assets/spiyki.obj" type="ArrayMesh" id=3]
+[ext_resource path="res://assets/mesh/spiyki.obj" type="ArrayMesh" id=3]
 
 [node name="Spiyki" type="MeshInstance"]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 3.59584, 0, 0 )

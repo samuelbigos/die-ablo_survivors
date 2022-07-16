@@ -3,6 +3,8 @@ using System;
 
 public static class Utils
 {
+    public static RandomNumberGenerator RNG = new RandomNumberGenerator();
+    
     public static void GlobalPosition(this Spatial spatial, Vector3 position)
     {
         spatial.GlobalTransform = new Transform(spatial.GlobalTransform.basis, position);

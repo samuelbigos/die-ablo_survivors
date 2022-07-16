@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/spiyki.obj-2f27c628c41e0444a68eeb22f5be0e3d.mesh"
+
+[deps]
+
+files=[ "res://.import/spiyki.obj-2f27c628c41e0444a68eeb22f5be0e3d.mesh" ]
+
+source_file="res://assets/mesh/spiyki.obj"
+dest_files=[ "res://.import/spiyki.obj-2f27c628c41e0444a68eeb22f5be0e3d.mesh", "res://.import/spiyki.obj-2f27c628c41e0444a68eeb22f5be0e3d.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

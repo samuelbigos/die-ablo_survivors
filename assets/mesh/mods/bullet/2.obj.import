@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/2.obj-1e4ba106571d6d2c49f1fa25782c7fca.mesh"
+
+[deps]
+
+files=[ "res://.import/2.obj-1e4ba106571d6d2c49f1fa25782c7fca.mesh" ]
+
+source_file="res://assets/mesh/mods/bullet/2.obj"
+dest_files=[ "res://.import/2.obj-1e4ba106571d6d2c49f1fa25782c7fca.mesh", "res://.import/2.obj-1e4ba106571d6d2c49f1fa25782c7fca.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

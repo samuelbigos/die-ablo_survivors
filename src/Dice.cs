@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using GodotOnReady.Attributes;
 
-public partial class Dice : MeshInstance
+public partial class Dice : GridObject
 {
     public static Dice Instance => _instance;
     private static Dice _instance;
@@ -14,27 +14,58 @@ public partial class Dice : MeshInstance
     [OnReadyGet] private Game _game;
     [OnReadyGet] private Camera _camera;
 
-    public Vector2 GridPos => _gridPos;
     public float MoveTime => _moveTime;
 
     private Queue<Vector2> _moves = new Queue<Vector2>();
     private Queue<Vector2> _rotations = new Queue<Vector2>();
-    private Vector2 _gridPos;
-    private Vector2 _moveStart;
-    private bool _moving;
-    private float _moveTimer;
     private Quat _rotFrom;
     private Quat _rot;
+    private Vector2 _forward;
+    private int _topFace;
 
-    [OnReady] 
-    private void Ready()
+    private Dictionary<int, ModDice> _mods = new();
+    private Dictionary<ModManager.ModTypes, List<MeshInstance>> _faces = new();
+    
+    protected override void Ready()
     {
         _gridPos = _start;
-        this.GlobalPosition(_game.GridToWorld(_gridPos));
-
+        
+        base.Ready();
+        
         _rot = GlobalTransform.basis.RotationQuat();
-
+        _mods[0] = null;
+        _mods[1] = null;
+        _mods[2] = null;
+        _mods[3] = null;
+        _mods[4] = null;
+        _mods[5] = null;
+        
         _instance = this;
+
+        for (int i = 0; i < 6; i++)
+        {
+            for (int j = 0; j < (int)ModManager.ModTypes.COUNT; j++)
+            {
+                if (j > 1) break; // until i implement others
+                
+                ModManager.ModTypes type = (ModManager.ModTypes) j;
+                if (!_faces.ContainsKey(type))
+                    _faces[type] = new List<MeshInstance>();
+                
+                List<MeshInstance> list = _faces[type];
+                MeshInstance mesh = GetNode<MeshInstance>($"{type.ToString()}{i + 1}");
+                list.Add(mesh);
+                ShaderMaterial mat = mesh.MaterialOverride as ShaderMaterial;
+                mat = mat.Duplicate() as ShaderMaterial; // set unique material so we can change colour
+                mesh.MaterialOverride = mat;
+                mat.SetShaderParam("u_col_1", ModManager.Instance.ModColours[type]);
+            }
+        }
+
+        for (int i = 0; i < 6; i++)
+        {
+            _faces[ModManager.ModTypes.Number][i].Visible = true;
+        }
     }
 
     public override void _Process(float delta)
@@ -81,7 +112,15 @@ public partial class Dice : MeshInstance
                 _moving = true;
 
                 _rotFrom = GlobalTransform.basis.RotationQuat();
-                _rot = GlobalTransform.basis.Rotated(new Vector3(rot.x, 0.0f, rot.y), Mathf.Pi * 0.5f).RotationQuat();
+                Basis rotBasis = GlobalTransform.basis.Rotated(new Vector3(rot.x, 0.0f, rot.y), Mathf.Pi * 0.5f);
+                _rot = rotBasis.RotationQuat();
+
+                _forward = (_gridPos - _moveStart).Normalized();
+                
+                for (int i = 0; i < 6; i++)
+                {
+                    if (FaceDirection(i, rotBasis).y > 0.5f) _topFace = i;
+                }
 
                 _game.TriggerTurn();
             }
@@ -106,22 +145,57 @@ public partial class Dice : MeshInstance
         _camera.GlobalPosition(GlobalTransform.origin + _camera.GlobalTransform.basis.z.Normalized() * 10.0f);
     }
 
-    private Vector3 FaceDirection(int face)
+    protected override void DoPreTurn()
     {
-        Basis basis = GlobalTransform.basis;
+        int bottom = BottomFace();
+        if (_mods[bottom] != null)
+        {
+            _mods[bottom].Activate(_gridPos, _forward);
+        }
+    }
+
+    public void OnPickup(ModPickup pickup)
+    {
+        int face = BottomFace();
+        SetFaceVisible(face, false);
+        
+        ModDice mod = new ModDice();
+        mod.Type = pickup.Type;
+        
+        mod.Face = face;
+        mod.Activate(_gridPos, _forward);
+        _mods[face] = mod;
+        
+        SetFaceVisible(face, true);
+    }
+
+    private void SetFaceVisible(int face, bool visible)
+    {
+        if (_mods[face] == null)
+        {
+            _faces[ModManager.ModTypes.Number][face].Visible = visible;
+        }
+        else
+        {
+            _faces[_mods[face].Type][face].Visible = visible;
+        }
+    }
+    
+    private Vector3 FaceDirection(int face, Basis basis)
+    {
         switch (face)
         {
-            case 1:
+            case 0:
                 return -basis.y.Normalized();
-            case 2:
+            case 1:
                 return basis.x.Normalized();
-            case 3:
+            case 2:
                 return -basis.z.Normalized();
-            case 4:
+            case 3:
                 return basis.z.Normalized();
-            case 5:
+            case 4:
                 return -basis.x.Normalized();
-            case 6:
+            case 5:
                 return basis.y.Normalized();
         }
 
@@ -130,16 +204,11 @@ public partial class Dice : MeshInstance
 
     private int TopFace()
     {
-        for (int i = 1; i <= 6; i++)
-        {
-            if (FaceDirection(i).y > 0.5f) return i;
-        }
-
-        return 0;
+        return _topFace;
     }
     
     private int BottomFace()
     {
-        return 7 - TopFace();
+        return 7 - (TopFace() + 1) - 1;
     }
 }

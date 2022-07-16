@@ -1,0 +1,100 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://assets/mesh/dice_faceless.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://assets/mesh/mods/bullet/6.obj" type="ArrayMesh" id=2]
+[ext_resource path="res://src/Dice.cs" type="Script" id=3]
+[ext_resource path="res://assets/mesh/mods/numbers/2.obj" type="ArrayMesh" id=4]
+[ext_resource path="res://assets/mesh/mods/numbers/1.obj" type="ArrayMesh" id=5]
+[ext_resource path="res://assets/mesh/mods/numbers/5.obj" type="ArrayMesh" id=6]
+[ext_resource path="res://assets/mesh/mods/numbers/6.obj" type="ArrayMesh" id=7]
+[ext_resource path="res://assets/mesh/mods/numbers/3.obj" type="ArrayMesh" id=8]
+[ext_resource path="res://assets/mesh/mods/numbers/4.obj" type="ArrayMesh" id=9]
+[ext_resource path="res://assets/mats/dice.material" type="Material" id=10]
+[ext_resource path="res://assets/mesh/mods/bullet/3.obj" type="ArrayMesh" id=11]
+[ext_resource path="res://assets/mesh/mods/bullet/5.obj" type="ArrayMesh" id=12]
+[ext_resource path="res://assets/mesh/mods/bullet/4.obj" type="ArrayMesh" id=13]
+[ext_resource path="res://assets/mesh/mods/bullet/2.obj" type="ArrayMesh" id=14]
+[ext_resource path="res://assets/mesh/mods/bullet/1.obj" type="ArrayMesh" id=15]
+
+[node name="Dice" type="MeshInstance"]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
+material_override = ExtResource( 10 )
+mesh = ExtResource( 1 )
+material/0 = null
+script = ExtResource( 3 )
+_color = Color( 1, 1, 1, 1 )
+GamePath = NodePath("..")
+CameraPath = NodePath("../Camera")
+_moveTime = 0.5
+
+[node name="Number1" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 5 )
+material/0 = null
+
+[node name="Number2" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 4 )
+material/0 = null
+
+[node name="Number3" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 8 )
+material/0 = null
+
+[node name="Number4" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 9 )
+material/0 = null
+
+[node name="Number5" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 6 )
+material/0 = null
+
+[node name="Number6" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 7 )
+material/0 = null
+
+[node name="Bullet1" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 15 )
+material/0 = null
+
+[node name="Bullet2" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 14 )
+material/0 = null
+
+[node name="Bullet3" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 11 )
+material/0 = null
+
+[node name="Bullet4" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 13 )
+material/0 = null
+
+[node name="Bullet5" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 12 )
+material/0 = null
+
+[node name="Bullet6" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 2 )
+material/0 = null
