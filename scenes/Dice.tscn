@@ -45,195 +45,43 @@ _maxHealth = 6
 GamePath = NodePath("..")
 CameraPath = NodePath("../Camera")
 _moveTime = 0.5
+_numberMeshes = [ ExtResource( 5 ), ExtResource( 4 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 6 ), ExtResource( 7 ) ]
+_bulletMeshes = [ ExtResource( 15 ), ExtResource( 14 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 12 ), ExtResource( 2 ) ]
+_healMeshes = [ ExtResource( 20 ), ExtResource( 21 ), ExtResource( 19 ), ExtResource( 18 ), ExtResource( 16 ), ExtResource( 17 ) ]
+_lightningMeshes = [ ExtResource( 22 ), ExtResource( 25 ), ExtResource( 24 ), ExtResource( 26 ), ExtResource( 27 ), ExtResource( 23 ) ]
+_coinMeshes = [ ExtResource( 29 ), ExtResource( 32 ), ExtResource( 30 ), ExtResource( 31 ), ExtResource( 33 ), ExtResource( 28 ) ]
 
-[node name="Number1" type="MeshInstance" parent="."]
-visible = false
+[node name="0" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0 )
 material_override = ExtResource( 10 )
 mesh = ExtResource( 5 )
 material/0 = null
 
-[node name="Number2" type="MeshInstance" parent="."]
-visible = false
+[node name="1" type="MeshInstance" parent="."]
+transform = Transform( -4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0, 0, 0 )
 material_override = ExtResource( 10 )
 mesh = ExtResource( 4 )
 material/0 = null
 
-[node name="Number3" type="MeshInstance" parent="."]
-visible = false
+[node name="2" type="MeshInstance" parent="."]
+transform = Transform( 1.91069e-15, 4.37114e-08, -1, 1, -4.37114e-08, 0, -4.37114e-08, -1, -4.37114e-08, 0, 0, 0 )
 material_override = ExtResource( 10 )
 mesh = ExtResource( 8 )
 material/0 = null
 
-[node name="Number4" type="MeshInstance" parent="."]
-visible = false
+[node name="3" type="MeshInstance" parent="."]
+transform = Transform( -1, -8.74228e-08, -3.82137e-15, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, 0, 0, 0 )
 material_override = ExtResource( 10 )
 mesh = ExtResource( 9 )
 material/0 = null
 
-[node name="Number5" type="MeshInstance" parent="."]
-visible = false
+[node name="4" type="MeshInstance" parent="."]
+transform = Transform( 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0, 0, 0 )
 material_override = ExtResource( 10 )
 mesh = ExtResource( 6 )
 material/0 = null
 
-[node name="Number6" type="MeshInstance" parent="."]
-visible = false
+[node name="5" type="MeshInstance" parent="."]
 material_override = ExtResource( 10 )
 mesh = ExtResource( 7 )
-material/0 = null
-
-[node name="Bullet1" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 15 )
-material/0 = null
-
-[node name="Bullet2" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 14 )
-material/0 = null
-
-[node name="Bullet3" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 11 )
-material/0 = null
-
-[node name="Bullet4" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 13 )
-material/0 = null
-
-[node name="Bullet5" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 12 )
-material/0 = null
-
-[node name="Bullet6" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 2 )
-material/0 = null
-
-[node name="Heal1" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 20 )
-material/0 = null
-
-[node name="Heal2" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 21 )
-material/0 = null
-
-[node name="Heal3" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 19 )
-material/0 = null
-
-[node name="Heal4" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 18 )
-material/0 = null
-
-[node name="Heal5" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 16 )
-material/0 = null
-
-[node name="Heal6" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 17 )
-material/0 = null
-
-[node name="Lightning1" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 22 )
-skeleton = NodePath("../Heal6")
-material/0 = null
-
-[node name="Lightning2" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 25 )
-skeleton = NodePath("../Heal6")
-material/0 = null
-
-[node name="Lightning3" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 24 )
-skeleton = NodePath("../Heal6")
-material/0 = null
-
-[node name="Lightning4" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 26 )
-skeleton = NodePath("../Heal6")
-material/0 = null
-
-[node name="Lightning5" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 27 )
-skeleton = NodePath("../Heal6")
-material/0 = null
-
-[node name="Lightning6" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 23 )
-skeleton = NodePath("../Heal6")
-material/0 = null
-
-[node name="Coin1" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 29 )
-skeleton = NodePath("../Heal6")
-material/0 = null
-
-[node name="Coin2" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 32 )
-skeleton = NodePath("../Heal6")
-material/0 = null
-
-[node name="Coin3" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 30 )
-skeleton = NodePath("../Heal6")
-material/0 = null
-
-[node name="Coin4" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 31 )
-skeleton = NodePath("../Heal6")
-material/0 = null
-
-[node name="Coin5" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 33 )
-skeleton = NodePath("../Heal6")
-material/0 = null
-
-[node name="Coin6" type="MeshInstance" parent="."]
-visible = false
-material_override = ExtResource( 10 )
-mesh = ExtResource( 28 )
-skeleton = NodePath("../Heal6")
 material/0 = null
