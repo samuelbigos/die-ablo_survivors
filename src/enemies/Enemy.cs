@@ -173,6 +173,7 @@ public partial class Enemy : GridObject
             OnHit(_health, ModManager.ModTypes.Freeze);
         }
         MaterialOverride = Resources.Instance.FreezeMaterial;
+        _unFreeze = false;
     }
 
     public override void _ExitTree()

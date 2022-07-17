@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using GodotOnReady.Attributes;
 
 public partial class Game : Singleton<Game>
@@ -28,6 +29,7 @@ public partial class Game : Singleton<Game>
     [OnReadyGet] private Label _turnsCounter;
     [OnReadyGet] private Label _coinsCounter;
     [OnReadyGet] private Label _waveLabel;
+    [OnReadyGet] private Label _musicLabel;
     
     // sfx
     [OnReadyGet] private AudioStreamPlayer2D _e1HitSfx;
@@ -67,6 +69,13 @@ public partial class Game : Singleton<Game>
         _dice.OnCollectPickup += OnCollectPickup;
 
         Utils.RNG.Seed = (ulong) DateTime.Now.Millisecond;
+
+        _waveLabel.Text = $"* Rolling onto power-ups attaches them to the bottom of your die.\n" +
+                          $"* Power-ups activate when that die face touches the ground.\n" +
+                          $"* Power-ups are stronger when attached to higher value die faces. Choose wisely!\n" +
+                          $"* Clear all waves to proceed to endless mode.\n" +
+                          $"HAVE FUN!";
+        _waveLabel.Visible = true;
     }
 
     private void OnCollectPickup()
@@ -91,6 +100,8 @@ public partial class Game : Singleton<Game>
 
     public void TriggerTurn()
     {
+        _musicLabel.Visible = false;
+        
         _moveSfx.Play();
         
         DoPreTurn?.Invoke(); // evaluate the dice move and resulting actions
@@ -183,10 +194,11 @@ public partial class Game : Singleton<Game>
 
             if (_currentWave >= Waves.W.Count)
             {
+                _turnCounter = 0;
                 _endless = true;
                 _waveLabel.Visible = true;
                 _waveLabel.Text = $"You finished all {Waves.W.Count} waves!\n You took {_turnCounter} turns, try using fewer next time.\n\n" +
-                                  $"Entering endless mode (very unbalanced/tested).";
+                                  $"Entering endless mode. Turn counter reset (share your high score!)";
             }
             else
             {
@@ -197,6 +209,12 @@ public partial class Game : Singleton<Game>
 
     private void SpawnEnemy(Vector2 pos, int type)
     {
+        bool valid = pos.x >= 0 && pos.x < GridSize.x &&
+                     pos.y >= 0 && pos.y < GridSize.y;
+        Debug.Assert(valid, "Invalid spawn");
+        if (!valid)
+            return;
+        
         Enemy enemy = _enemyScenes[type].Instance<Enemy>();
         AddChild(enemy);
         _enemies.Add(enemy);
@@ -228,7 +246,7 @@ public partial class Game : Singleton<Game>
             do
             {
                 type = (ModManager.ModTypes) Utils.RNG.RandiRange(1, (int) (ModManager.ModTypes.COUNT - 1));
-            } while (type == _lastPickup);
+            } while (type == _lastPickup || (type == ModManager.ModTypes.Heal && _currentWave <= 3));
         }
         ModPickup bulletPickup = ModManager.Instance.ModPickupScenes[type].Instance<ModPickup>();
         AddChild(bulletPickup);

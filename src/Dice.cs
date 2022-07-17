@@ -101,6 +101,11 @@ public partial class Dice : GridObject
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            for (int j = 0; j < 6; j++)
+            {
+                ResourceLoader.Load(_meshes[(ModManager.ModTypes) i][j].ResourcePath); // Preload
+            }
         }
 
         for (int i = 0; i < 6; i++)

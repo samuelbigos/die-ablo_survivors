@@ -103,12 +103,11 @@ public class ModDice : Node
 
     private void Activate_Heal(Vector2 pos, Vector2 forward, int value)
     {
-        Dice.Instance.Heal(HealAmount(value));
-
         if (value == 6)
         {
             Dice.Instance.SetMaxHealth(12);
         }
+        Dice.Instance.Heal(HealAmount(value));
     }
     
     private void Activate_Lightning(Vector2 gridPos, Vector2 forward, int value)
@@ -125,16 +124,16 @@ public class ModDice : Node
             case 2: dist = 3.0f;
                 damage = 1;
                 break;
-            case 3: dist = 3.5f;
+            case 3: dist = 3.0f;
                 damage = 2;
                 break;
             case 4: dist = 3.5f;
                 damage = 2;
                 break;
-            case 5: dist = 4.0f;
+            case 5: dist = 3.5f;
                 damage = 3;
                 break;
-            case 6: dist = 4.0f;
+            case 6: dist = 3.5f;
                 chain = true;
                 damage = 3;
                 break;

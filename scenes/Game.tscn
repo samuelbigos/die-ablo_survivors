@@ -1,4 +1,4 @@
-[gd_scene load_steps=76 format=2]
+[gd_scene load_steps=77 format=2]
 
 [ext_resource path="res://scenes/Dice.tscn" type="PackedScene" id=1]
 [ext_resource path="res://default_env.tres" type="Environment" id=2]
@@ -73,6 +73,7 @@
 [ext_resource path="res://assets/sfx/e3_destroy.wav" type="AudioStream" id=71]
 [ext_resource path="res://assets/sfx/e1_destroy.wav" type="AudioStream" id=72]
 [ext_resource path="res://assets/sfx/e2_destroy.wav" type="AudioStream" id=73]
+[ext_resource path="res://assets/sfx/Anemoia - Mismatch.mp3" type="AudioStream" id=74]
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_unshaded = true
@@ -93,6 +94,7 @@ CanvasPath = NodePath("CanvasLayer")
 TurnsCounterPath = NodePath("CanvasLayer/Control/VBoxContainer/TurnsContainer/MarginContainer/Turns")
 CoinsCounterPath = NodePath("CanvasLayer/Control/VBoxContainer/CoinsContainer/MarginContainer/Coins")
 WaveLabelPath = NodePath("CanvasLayer/Control/Wave/Waves")
+MusicLabelPath = NodePath("CanvasLayer/Control/Music")
 E1HitSfxPath = NodePath("SFXEnemyHit1")
 E2HitSfxPath = NodePath("SFXEnemyHit2")
 E3HitSfxPath = NodePath("SFXEnemyHit3")
@@ -420,6 +422,7 @@ margin_bottom = 32.0
 texture = ExtResource( 27 )
 
 [node name="Debug" type="VBoxContainer" parent="CanvasLayer/Control"]
+visible = false
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -263.0
@@ -441,6 +444,16 @@ margin_top = 36.0
 margin_right = 263.0
 margin_bottom = 50.0
 align = 2
+
+[node name="Music" type="Label" parent="CanvasLayer/Control"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -44.0
+theme = ExtResource( 29 )
+custom_colors/font_color = Color( 0.905882, 0.905882, 0.905882, 1 )
+text = "Music: Mismatch by Anemoia (link on Itch.io page)"
+align = 1
 
 [node name="SFXStep" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 65 )
@@ -471,3 +484,7 @@ stream = ExtResource( 71 )
 
 [node name="SFXDiceHit" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 67 )
+
+[node name="Music" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 74 )
+autoplay = true

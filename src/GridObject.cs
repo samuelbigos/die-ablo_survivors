@@ -7,7 +7,7 @@ public partial class GridObject : MeshInstance
     [Export] private Color _color;
     [Export] private int _damage = 1;
     [Export] protected int _maxHealth = 1;
-    [Export] private float _spawnDropTime = 1.0f;
+    [Export] private float _spawnDropTime = 0.66f;
 
     public int Damage => _damage;
     public Vector2 GridPos => _gridPos;
@@ -16,6 +16,7 @@ public partial class GridObject : MeshInstance
     public Action<GridObject, int, ModManager.ModTypes> OnDamaged;
 
     protected SpatialMaterial _defaultMaterial;
+    protected Material _beforeFlashMat;
 
     protected int _health;
     protected Vector2 _gridPos;
@@ -81,7 +82,7 @@ public partial class GridObject : MeshInstance
             if (_hitFlashTimer < 0.0f)
             {
                 _flashing = false;
-                MaterialOverride = _defaultMaterial;
+                MaterialOverride = _beforeFlashMat;
             }
         }
         
@@ -113,6 +114,7 @@ public partial class GridObject : MeshInstance
         _health -= damage;
         _flashing = true;
         _hitFlashTimer = 1.0f / 10.0f;
+        _beforeFlashMat = MaterialOverride;
         MaterialOverride = Resources.Instance.FlashMaterial;
         
         OnDamaged?.Invoke(this, damage, type);
