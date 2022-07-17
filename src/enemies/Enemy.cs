@@ -42,7 +42,7 @@ public partial class Enemy : GridObject
             rotAround = new Vector2(rotAround.y, -rotAround.x);
             _rotEnd = GlobalTransform.basis.Rotated(rotAround.Normalized().To3D(), Mathf.Pi * 0.5f).RotationQuat();
 
-            Dice.Instance.OnHit(Damage);
+            Dice.Instance.OnHit(Damage, ModManager.ModTypes.Number);
         }
             
         Pathfinding.Instance.RegisterPosition(_gridPos);

@@ -19,6 +19,8 @@ public partial class Dice : GridObject
     public float MaxHealth => _maxHealth;
     public float Health => _health;
 
+    public Action<Dice, int> OnHealed;
+    
     private DiceIndicator _indicator;
     private Queue<Vector2> _moves = new Queue<Vector2>();
     private Queue<Vector2> _rotations = new Queue<Vector2>();
@@ -196,6 +198,12 @@ public partial class Dice : GridObject
             _leftFace,
         };
         _indicator.UpdateSides(types, faces);
+    }
+
+    public void Heal(int amount)
+    {
+        _health = Mathf.Min(_health + amount, _maxHealth);
+        OnHealed?.Invoke(this, amount);
     }
     
     public void OnPickup(ModPickup pickup)

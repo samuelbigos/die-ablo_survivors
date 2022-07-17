@@ -13,7 +13,7 @@ public partial class GridObject : MeshInstance
     public Vector2 GridPos => _gridPos;
     
     public Action<GridObject> OnDestroyed;
-    public Action<GridObject, int> OnDamaged;
+    public Action<GridObject, int, ModManager.ModTypes> OnDamaged;
     
     private SpatialMaterial _defaultMaterial;
 
@@ -108,14 +108,14 @@ public partial class GridObject : MeshInstance
         }
     }
     
-    public virtual void OnHit(int damage)
+    public virtual void OnHit(int damage, ModManager.ModTypes type)
     {
         _health -= damage;
         _flashing = true;
         _hitFlashTimer = 1.0f / 10.0f;
         MaterialOverride = Resources.Instance.FlashMaterial;
         
-        OnDamaged?.Invoke(this, damage);
+        OnDamaged?.Invoke(this, damage, type);
     }
 
     protected virtual void Destroy()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=48 format=2]
 
 [ext_resource path="res://scenes/Dice.tscn" type="PackedScene" id=1]
 [ext_resource path="res://default_env.tres" type="Environment" id=2]
@@ -30,6 +30,21 @@
 [ext_resource path="res://src/gui/Health.cs" type="Script" id=28]
 [ext_resource path="res://assets/theme.tres" type="Theme" id=29]
 [ext_resource path="res://assets/gui/rounded_rect.png" type="Texture" id=30]
+[ext_resource path="res://assets/mesh/mods/heal/flat/1.obj" type="ArrayMesh" id=31]
+[ext_resource path="res://assets/mesh/mods/heal/flat/2.obj" type="ArrayMesh" id=32]
+[ext_resource path="res://assets/mesh/mods/heal/flat/4.obj" type="ArrayMesh" id=33]
+[ext_resource path="res://assets/mesh/mods/heal/flat/6.obj" type="ArrayMesh" id=34]
+[ext_resource path="res://assets/mesh/mods/heal/flat/3.obj" type="ArrayMesh" id=35]
+[ext_resource path="res://assets/mesh/mods/heal/flat/5.obj" type="ArrayMesh" id=36]
+[ext_resource path="res://scenes/mods/ModPickup_Health.tscn" type="PackedScene" id=37]
+[ext_resource path="res://scenes/mods/ModPickup_Lightning.tscn" type="PackedScene" id=38]
+[ext_resource path="res://assets/mesh/mods/lightning/flat/1.obj" type="ArrayMesh" id=39]
+[ext_resource path="res://assets/mesh/mods/lightning/flat/6.obj" type="ArrayMesh" id=40]
+[ext_resource path="res://assets/mesh/mods/lightning/flat/2.obj" type="ArrayMesh" id=41]
+[ext_resource path="res://assets/mesh/mods/lightning/flat/5.obj" type="ArrayMesh" id=42]
+[ext_resource path="res://assets/mesh/mods/lightning/flat/3.obj" type="ArrayMesh" id=43]
+[ext_resource path="res://assets/mesh/mods/lightning/flat/4.obj" type="ArrayMesh" id=44]
+[ext_resource path="res://scenes/vfx/LightningVFX.tscn" type="PackedScene" id=45]
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_unshaded = true
@@ -48,6 +63,9 @@ DiceIndicatorPath = NodePath("DiceIndicator")
 CameraPath = NodePath("Camera")
 CanvasPath = NodePath("CanvasLayer")
 TurnsCounterPath = NodePath("CanvasLayer/Control/TurnsContainer/MarginContainer/Turns")
+FpsPath = NodePath("CanvasLayer/Control/Debug/FPS")
+VertsPath = NodePath("CanvasLayer/Control/Debug/Verts")
+DrawsPath = NodePath("CanvasLayer/Control/Debug/Draws")
 _startScene = "res://scenes/gui/StartScreen.tscn"
 GridSize = Vector2( 20, 20 )
 _enemyScenes = [ ExtResource( 5 ) ]
@@ -62,12 +80,19 @@ _numberColour = Color( 0.329412, 0.329412, 0.329412, 1 )
 _numberColourSecondary = Color( 1, 1, 1, 1 )
 _bulletColour = Color( 0.54902, 0.14902, 0.109804, 1 )
 _bulletColourSecondary = Color( 0.909804, 0.254902, 0.254902, 1 )
+_healthColour = Color( 0.372549, 0.698039, 0.0745098, 1 )
+_healthColourSecondary = Color( 0.717647, 0.933333, 0.337255, 1 )
+_lightningColour = Color( 1, 0.701961, 0, 1 )
+_lightningColourSecondary = Color( 1, 0.888, 0.44, 1 )
 _bulletScene = ExtResource( 10 )
+_healthScene = ExtResource( 37 )
+_lightningScene = ExtResource( 38 )
 BulletParticles = ExtResource( 13 )
 
 [node name="Resources" type="Node" parent="."]
 script = ExtResource( 12 )
 FlashMaterial = SubResource( 1 )
+LightningVFX = ExtResource( 45 )
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 0.707106, -0.612373, 0.353553, 0, 0.5, 0.866025, -0.707106, -0.612373, 0.353553, 8.27655, 10, 5.1528 )
@@ -79,6 +104,7 @@ size = 10.0
 transform = Transform( -0.75, -0.5, 0.433013, 0.5, -6.95453e-09, 0.866025, -0.433013, 0.866025, 0.25, 0, 14.6515, 0 )
 shadow_enabled = true
 shadow_color = Color( 0.364706, 0.364706, 0.364706, 1 )
+directional_shadow_mode = 0
 directional_shadow_blend_splits = true
 directional_shadow_normal_bias = 0.1
 directional_shadow_depth_range = 1
@@ -98,6 +124,8 @@ BottomPath = NodePath("Bottom")
 LeftPath = NodePath("Left")
 _numberMeshes = [ ExtResource( 15 ), ExtResource( 19 ), ExtResource( 17 ), ExtResource( 20 ), ExtResource( 16 ), ExtResource( 25 ) ]
 _bulletMeshes = [ ExtResource( 4 ), ExtResource( 21 ), ExtResource( 18 ), ExtResource( 22 ), ExtResource( 23 ), ExtResource( 24 ) ]
+_healMeshes = [ ExtResource( 31 ), ExtResource( 32 ), ExtResource( 35 ), ExtResource( 33 ), ExtResource( 36 ), ExtResource( 34 ) ]
+_lightningMeshes = [ ExtResource( 39 ), ExtResource( 41 ), ExtResource( 43 ), ExtResource( 44 ), ExtResource( 42 ), ExtResource( 40 ) ]
 
 [node name="Top" type="MeshInstance" parent="DiceIndicator"]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.5, -1 )
@@ -224,8 +252,8 @@ custom_constants/margin_bottom = 10
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/TurnsContainer"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 32.0
-margin_bottom = 41.0
+margin_right = 34.0
+margin_bottom = 43.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 texture = ExtResource( 30 )
@@ -234,8 +262,8 @@ expand = true
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control/TurnsContainer"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 32.0
-margin_bottom = 41.0
+margin_right = 34.0
+margin_bottom = 43.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 1
 custom_constants/margin_left = 5
@@ -244,10 +272,33 @@ custom_constants/margin_bottom = 1
 [node name="Turns" type="Label" parent="CanvasLayer/Control/TurnsContainer/MarginContainer"]
 margin_left = 5.0
 margin_top = 1.0
-margin_right = 17.0
-margin_bottom = 30.0
+margin_right = 19.0
+margin_bottom = 32.0
 theme = ExtResource( 29 )
 custom_colors/font_color = Color( 0.172549, 0.172549, 0.172549, 1 )
 text = "0"
 align = 1
 valign = 1
+
+[node name="Debug" type="VBoxContainer" parent="CanvasLayer/Control"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -263.0
+margin_bottom = 72.0
+
+[node name="FPS" type="Label" parent="CanvasLayer/Control/Debug"]
+margin_right = 263.0
+margin_bottom = 14.0
+align = 2
+
+[node name="Verts" type="Label" parent="CanvasLayer/Control/Debug"]
+margin_top = 18.0
+margin_right = 263.0
+margin_bottom = 32.0
+align = 2
+
+[node name="Draws" type="Label" parent="CanvasLayer/Control/Debug"]
+margin_top = 36.0
+margin_right = 263.0
+margin_bottom = 50.0
+align = 2

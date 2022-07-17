@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/5.obj-f6b832ccd855174adbb72f41a15137f1.mesh"
+
+[deps]
+
+files=[ "res://.import/5.obj-f6b832ccd855174adbb72f41a15137f1.mesh" ]
+
+source_file="res://assets/mesh/mods/lightning/5.obj"
+dest_files=[ "res://.import/5.obj-f6b832ccd855174adbb72f41a15137f1.mesh", "res://.import/5.obj-f6b832ccd855174adbb72f41a15137f1.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

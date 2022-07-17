@@ -5,4 +5,5 @@ using System.Diagnostics;
 public class Resources : Singleton<Resources>
 {
     [Export] public Material FlashMaterial;
+    [Export] public PackedScene LightningVFX;
 }

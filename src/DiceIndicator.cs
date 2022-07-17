@@ -14,7 +14,9 @@ public partial class DiceIndicator : Spatial
     
     [Export] private List<Mesh> _numberMeshes;
     [Export] private List<Mesh> _bulletMeshes;
-
+    [Export] private List<Mesh> _healMeshes;
+    [Export] private List<Mesh> _lightningMeshes;
+    
     private Dictionary<ModManager.ModTypes, List<Mesh>> _meshes = new();
     
     [OnReady]
@@ -31,6 +33,12 @@ public partial class DiceIndicator : Spatial
                     break;
                 case ModManager.ModTypes.Bullet:
                     _meshes[(ModManager.ModTypes) i] = _bulletMeshes;
+                    break;
+                case ModManager.ModTypes.Heal:
+                    _meshes[(ModManager.ModTypes) i] = _healMeshes;
+                    break;
+                case ModManager.ModTypes.Lightning:
+                    _meshes[(ModManager.ModTypes) i] = _lightningMeshes;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

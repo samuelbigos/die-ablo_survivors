@@ -19,7 +19,7 @@ public partial class ModPickup : Spatial
         GlobalTransform = new Transform(GlobalTransform.basis, _gridPos.To3D());
         
         ShaderMaterial shader1 = (_mesh1.MaterialOverride as ShaderMaterial).Duplicate() as ShaderMaterial;
-        shader1.SetShaderParam("u_col_2", ModManager.Instance.ModColours[type]);
+        shader1.SetShaderParam("u_col", ModManager.Instance.ModColours[type]);
         _mesh1.MaterialOverride = shader1;
         
         SpatialMaterial shader2 = (_mesh2.MaterialOverride as SpatialMaterial).Duplicate() as SpatialMaterial;

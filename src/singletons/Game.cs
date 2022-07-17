@@ -25,6 +25,11 @@ public partial class Game : Singleton<Game>
     [OnReadyGet] private CanvasLayer _canvas;
     [OnReadyGet] private Label _turnsCounter;
     
+    // debug
+    [OnReadyGet] private Label _fps;
+    [OnReadyGet] private Label _verts;
+    [OnReadyGet] private Label _draws;
+    
     private List<Enemy> _enemies = new List<Enemy>();
     private int _turnCounter;
     private bool _gameOver;
@@ -35,6 +40,7 @@ public partial class Game : Singleton<Game>
     {
         _dice.OnDestroyed += OnGridObjectDestroyed;
         _dice.OnDamaged += OnGridObjectDamaged;
+        _dice.OnHealed += OnHealed;
 
         Utils.RNG.Seed = (ulong) DateTime.Now.Millisecond;
     }
@@ -42,7 +48,12 @@ public partial class Game : Singleton<Game>
     public override void _Process(float delta)
     {
         base._Process(delta);
-
+        
+        // debug
+        _fps.Text = $"FPS: {Performance.GetMonitor(Performance.Monitor.TimeFps):02}";
+        _verts.Text = $"Verts: {Performance.GetMonitor(Performance.Monitor.RenderVerticesInFrame)}";
+        _draws.Text = $"Draws: {Performance.GetMonitor(Performance.Monitor.RenderDrawCallsInFrame)}";
+        
         if (_gameOver)
             GetTree().ChangeScene(_startScene);
     }
@@ -59,7 +70,7 @@ public partial class Game : Singleton<Game>
         
         if (_turnCounter == 1)
         {
-            TrySpawnPickup(new Vector2(16, 16));
+            TrySpawnPickup(new Vector2(16, 16), ModManager.ModTypes.COUNT);
         }
         
         if (_turnCounter % 3 == 0)
@@ -91,50 +102,56 @@ public partial class Game : Singleton<Game>
         enemy.OnDamaged += OnGridObjectDamaged;
     }
 
-    private void TrySpawnPickup(Vector2 gridPos)
+    private void TrySpawnPickup(Vector2 gridPos, ModManager.ModTypes type)
     {
         int spawn = 1;
         if (_turnCounter >= spawn && _lastSpawnedPickup < spawn)
         {
-            SpawnPickup(gridPos);
+            SpawnPickup(gridPos, ModManager.ModTypes.Bullet);
+            SpawnPickup(gridPos + Vector2.Up, ModManager.ModTypes.Heal);
+            SpawnPickup(gridPos + Vector2.Up * 2.0f, ModManager.ModTypes.Lightning);
         }
         
         spawn = 10;
         if (_turnCounter >= spawn && _lastSpawnedPickup < spawn)
         {
-            SpawnPickup(gridPos);
+            SpawnPickup(gridPos, type);
         }
         
         spawn = 30;
         if (_turnCounter >= spawn && _lastSpawnedPickup < spawn)
         {
-            SpawnPickup(gridPos);
+            SpawnPickup(gridPos, type);
         }
         
         spawn = 70;
         if (_turnCounter >= spawn && _lastSpawnedPickup < spawn)
         {
-            SpawnPickup(gridPos);
+            SpawnPickup(gridPos, type);
         }
         
         spawn = 110;
         if (_turnCounter >= spawn && _lastSpawnedPickup < spawn)
         {
-            SpawnPickup(gridPos);
+            SpawnPickup(gridPos, type);
         }
         
         spawn = 160;
         if (_turnCounter >= spawn && _lastSpawnedPickup < spawn)
         {
-            SpawnPickup(gridPos);
+            SpawnPickup(gridPos, type);
         }
     }
 
-    private void SpawnPickup(Vector2 gridPos)
+    private void SpawnPickup(Vector2 gridPos, ModManager.ModTypes type)
     {
-        ModPickup bulletPickup = ModManager.Instance.ModPickupScenes[ModManager.ModTypes.Bullet].Instance<ModPickup>();
+        if (type == ModManager.ModTypes.COUNT)
+        {
+            type = (ModManager.ModTypes) Utils.RNG.RandiRange(1, (int) (ModManager.ModTypes.COUNT - 1));
+        }
+        ModPickup bulletPickup = ModManager.Instance.ModPickupScenes[type].Instance<ModPickup>();
         AddChild(bulletPickup);
-        bulletPickup.Init(gridPos, ModManager.ModTypes.Bullet);
+        bulletPickup.Init(gridPos, type);
         _lastSpawnedPickup = _turnCounter;
     }
 
@@ -152,12 +169,21 @@ public partial class Game : Singleton<Game>
         return true;
     }
     
-    private void OnGridObjectDamaged(GridObject obj, int damage)
+    private void OnGridObjectDamaged(GridObject obj, int damage, ModManager.ModTypes type)
     {
         FloatingText floatingText = _floatingText.Instance<FloatingText>();
         _canvas.AddChild(floatingText);
         string text = obj is Dice ? $"-{damage}" : $"{damage}";
-        floatingText.Init(_camera, obj, text);
+        Color col = obj is Dice ? ModManager.Instance.ModColours[ModManager.ModTypes.Number] : ModManager.Instance.ModColours[type];
+        floatingText.Init(_camera, obj, text, col);
+    }
+    
+    private void OnHealed(Dice dice, int amount)
+    {
+        FloatingText floatingText = _floatingText.Instance<FloatingText>();
+        _canvas.AddChild(floatingText);
+        string text = $"+{amount}";
+        floatingText.Init(_camera, dice, text, ModManager.Instance.ModColours[ModManager.ModTypes.Heal]);
     }
     
     private void OnGridObjectDestroyed(GridObject obj)
@@ -165,7 +191,7 @@ public partial class Game : Singleton<Game>
         if (obj is Enemy enemy)
         {
             _enemies.Remove(enemy);
-            TrySpawnPickup(obj.GridPos);
+            TrySpawnPickup(obj.GridPos, ModManager.ModTypes.COUNT);
         }
 
         if (obj is Dice)

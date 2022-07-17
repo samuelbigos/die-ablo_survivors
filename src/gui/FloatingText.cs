@@ -10,11 +10,12 @@ public class FloatingText : Label
     private Vector3 _cachedPos;
     private Camera _camera;
     
-    public void Init(Camera camera, GridObject obj, string text)
+    public void Init(Camera camera, GridObject obj, string text, Color col)
     {
         _camera = camera;
         _obj = obj;
         Text = text;
+        Modulate = col;
         _timer = _duration;
         UpdatePos();
     }
@@ -38,7 +39,7 @@ public class FloatingText : Label
         {
             _cachedPos = _obj.GlobalTransform.origin;
         }
-        Vector2 screen = _camera.UnprojectPosition(_cachedPos + Vector3.Up * Utils.EaseOutCubic(1.0f - (_timer / _duration)) * 2.0f);
+        Vector2 screen = _camera.UnprojectPosition(_cachedPos + Vector3.Up * Utils.EaseOutCubic(1.0f - (_timer / _duration)) * 3.0f);
         screen -= RectSize * 0.5f;
         RectGlobalPosition = screen;
     }

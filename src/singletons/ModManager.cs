@@ -8,8 +8,9 @@ public class ModManager : Singleton<ModManager>
     {
         Number,
         Bullet,
-        //Laser,
-        //Health,
+        Heal,
+        Lightning,
+        
         //Coin,
         //Freeze,
         //Explode,
@@ -20,18 +21,20 @@ public class ModManager : Singleton<ModManager>
     [Export] private Color _numberColourSecondary;
     [Export] private Color _bulletColour;
     [Export] private Color _bulletColourSecondary;
-    [Export] private Color _laserColour;
     [Export] private Color _healthColour;
-    [Export] private Color _coinColour;
-    [Export] private Color _freezeColour;
-    [Export] private Color _explodeColour;
+    [Export] private Color _healthColourSecondary;
+    [Export] private Color _lightningColour;
+    [Export] private Color _lightningColourSecondary;
+    // [Export] private Color _coinColour;
+    // [Export] private Color _freezeColour;
+    // [Export] private Color _explodeColour;
     
     [Export] private PackedScene _bulletScene;
-    [Export] private PackedScene _laserScene;
     [Export] private PackedScene _healthScene;
-    [Export] private PackedScene _coinScene;
-    [Export] private PackedScene _freezeScene;
-    [Export] private PackedScene _explodeScene;
+    [Export] private PackedScene _lightningScene;
+    // [Export] private PackedScene _coinScene;
+    // [Export] private PackedScene _freezeScene;
+    // [Export] private PackedScene _explodeScene;
 
     [Export] public PackedScene BulletParticles;
 
@@ -47,15 +50,17 @@ public class ModManager : Singleton<ModManager>
         ModColoursSecondary[ModTypes.Number] = _numberColourSecondary;
         ModColours[ModTypes.Bullet] = _bulletColour;
         ModColoursSecondary[ModTypes.Bullet] = _bulletColourSecondary;
-        // ModColours[ModTypes.Laser] = _laserColour;
-        // ModColours[ModTypes.Health] = _healthColour;
+        ModColours[ModTypes.Heal] = _healthColour;
+        ModColoursSecondary[ModTypes.Heal] = _healthColourSecondary;
+        ModColours[ModTypes.Lightning] = _lightningColour;
+        ModColoursSecondary[ModTypes.Lightning] = _lightningColourSecondary;
         // ModColours[ModTypes.Coin] = _coinColour;
         // ModColours[ModTypes.Freeze] = _freezeColour;
         // ModColours[ModTypes.Explode] = _explodeColour;
         
         ModPickupScenes[ModTypes.Bullet] = _bulletScene;
-        // ModPickupScenes[ModTypes.Laser] = _laserScene;
-        // ModPickupScenes[ModTypes.Health] = _healthScene;
+        ModPickupScenes[ModTypes.Heal] = _healthScene;
+        ModPickupScenes[ModTypes.Lightning] = _lightningScene;
         // ModPickupScenes[ModTypes.Coin] = _coinScene;
         // ModPickupScenes[ModTypes.Freeze] = _freezeScene;
         // ModPickupScenes[ModTypes.Explode] = _explodeScene;

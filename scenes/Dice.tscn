@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://assets/mesh/dice_faceless.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://assets/mesh/mods/bullet/6.obj" type="ArrayMesh" id=2]
@@ -15,6 +15,18 @@
 [ext_resource path="res://assets/mesh/mods/bullet/4.obj" type="ArrayMesh" id=13]
 [ext_resource path="res://assets/mesh/mods/bullet/2.obj" type="ArrayMesh" id=14]
 [ext_resource path="res://assets/mesh/mods/bullet/1.obj" type="ArrayMesh" id=15]
+[ext_resource path="res://assets/mesh/mods/heal/5.obj" type="ArrayMesh" id=16]
+[ext_resource path="res://assets/mesh/mods/heal/6.obj" type="ArrayMesh" id=17]
+[ext_resource path="res://assets/mesh/mods/heal/4.obj" type="ArrayMesh" id=18]
+[ext_resource path="res://assets/mesh/mods/heal/3.obj" type="ArrayMesh" id=19]
+[ext_resource path="res://assets/mesh/mods/heal/1.obj" type="ArrayMesh" id=20]
+[ext_resource path="res://assets/mesh/mods/heal/2.obj" type="ArrayMesh" id=21]
+[ext_resource path="res://assets/mesh/mods/lightning/1.obj" type="ArrayMesh" id=22]
+[ext_resource path="res://assets/mesh/mods/lightning/6.obj" type="ArrayMesh" id=23]
+[ext_resource path="res://assets/mesh/mods/lightning/3.obj" type="ArrayMesh" id=24]
+[ext_resource path="res://assets/mesh/mods/lightning/2.obj" type="ArrayMesh" id=25]
+[ext_resource path="res://assets/mesh/mods/lightning/4.obj" type="ArrayMesh" id=26]
+[ext_resource path="res://assets/mesh/mods/lightning/5.obj" type="ArrayMesh" id=27]
 
 [node name="Dice" type="MeshInstance"]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
@@ -98,4 +110,82 @@ material/0 = null
 visible = false
 material_override = ExtResource( 10 )
 mesh = ExtResource( 2 )
+material/0 = null
+
+[node name="Heal1" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 20 )
+material/0 = null
+
+[node name="Heal2" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 21 )
+material/0 = null
+
+[node name="Heal3" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 19 )
+material/0 = null
+
+[node name="Heal4" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 18 )
+material/0 = null
+
+[node name="Heal5" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 16 )
+material/0 = null
+
+[node name="Heal6" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 17 )
+material/0 = null
+
+[node name="Lightning1" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 22 )
+skeleton = NodePath("../Heal6")
+material/0 = null
+
+[node name="Lightning2" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 25 )
+skeleton = NodePath("../Heal6")
+material/0 = null
+
+[node name="Lightning3" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 24 )
+skeleton = NodePath("../Heal6")
+material/0 = null
+
+[node name="Lightning4" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 26 )
+skeleton = NodePath("../Heal6")
+material/0 = null
+
+[node name="Lightning5" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 27 )
+skeleton = NodePath("../Heal6")
+material/0 = null
+
+[node name="Lightning6" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 23 )
+skeleton = NodePath("../Heal6")
 material/0 = null
