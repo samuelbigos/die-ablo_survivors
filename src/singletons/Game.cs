@@ -26,6 +26,7 @@ public partial class Game : Singleton<Game>
     [OnReadyGet] private Camera _camera;
     [OnReadyGet] private CanvasLayer _canvas;
     [OnReadyGet] private Label _turnsCounter;
+    [OnReadyGet] private Label _coinsCounter;
     
     // debug
     [OnReadyGet] private Label _fps;
@@ -58,6 +59,8 @@ public partial class Game : Singleton<Game>
         
         if (_gameOver)
             GetTree().ChangeScene(_startScene);
+        
+        _coinsCounter.Text = $"{_dice.Coins}";
     }
 
     public void TriggerTurn()
@@ -89,7 +92,7 @@ public partial class Game : Singleton<Game>
     private void SpawnEnemy()
     {
         Vector2 pos = RandPointOnEdge();
-        Enemy enemy = _enemyScenes[0].Instance<Enemy>();
+        Enemy enemy = _enemyScenes[2].Instance<Enemy>();
         AddChild(enemy);
         _enemies.Add(enemy);
         enemy.Init(pos);
@@ -121,6 +124,7 @@ public partial class Game : Singleton<Game>
             SpawnPickup(gridPos + Vector2.Up, ModManager.ModTypes.Heal);
             SpawnPickup(gridPos + Vector2.Up * 2.0f, ModManager.ModTypes.Lightning);
             SpawnPickup(gridPos + Vector2.Up * 3.0f, ModManager.ModTypes.Coin);
+            SpawnPickup(gridPos + Vector2.Up * -1.0f, ModManager.ModTypes.Freeze);
             SpawnOneUp(gridPos + Vector2.Right);
         }
         
@@ -208,11 +212,12 @@ public partial class Game : Singleton<Game>
 
     public void OnCoinCollect(int amount)
     {
-        _dice.Coins++;
+        _dice.Coins += amount;
         FloatingText floatingText = _floatingText.Instance<FloatingText>();
         _canvas.AddChild(floatingText);
         string text = $"+{amount}";
         floatingText.Init(_camera, _dice, text, ModManager.Instance.ModColours[ModManager.ModTypes.Coin]);
+        _coinsCounter.Text = $"{_dice.Coins}";
     }
     
     private void OnGridObjectDestroyed(GridObject obj)

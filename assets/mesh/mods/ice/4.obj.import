@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/4.obj-9901236a2f491f85fa0d57cf436ae95b.mesh"
+
+[deps]
+
+files=[ "res://.import/4.obj-9901236a2f491f85fa0d57cf436ae95b.mesh" ]
+
+source_file="res://assets/mesh/mods/ice/4.obj"
+dest_files=[ "res://.import/4.obj-9901236a2f491f85fa0d57cf436ae95b.mesh", "res://.import/4.obj-9901236a2f491f85fa0d57cf436ae95b.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

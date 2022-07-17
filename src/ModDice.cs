@@ -6,6 +6,8 @@ public class ModDice : Node
 {
     public ModManager.ModTypes Type;
 
+    private List<Particles> _prevBullets = new List<Particles>();
+
     public ModDice(ModManager.ModTypes type)
     {
         Type = type;
@@ -13,6 +15,11 @@ public class ModDice : Node
 
     public void Activate(Vector2 pos, Vector2 forward, int value)
     {
+        foreach (Particles bullet in _prevBullets)
+        {
+            bullet.QueueFree();
+        }
+        
         switch (Type)
         {
             case ModManager.ModTypes.Number:
@@ -29,8 +36,9 @@ public class ModDice : Node
             case ModManager.ModTypes.Coin:
                 Activate_Coin(pos, forward, value);
                 break;
-            // case ModManager.ModTypes.Freeze:
-            //     break;
+            case ModManager.ModTypes.Freeze:
+                Activate_Freeze(pos, forward, value);
+                break;
             // case ModManager.ModTypes.Explode:
             //     break;
             default:
@@ -40,47 +48,65 @@ public class ModDice : Node
 
     private void Activate_Bullet(Vector2 pos, Vector2 forward, int value)
     {
-        Vector2 grid = pos + forward;
-        bool hit = false;
-        while (Game.Instance.InBounds(grid))
+        List<Vector2> dirs = new();
+        dirs.Add(forward);
+        dirs.Add(-forward);
+        dirs.Add(new Vector2(forward.y, -forward.x));
+        dirs.Add(-new Vector2(forward.y, -forward.x));
+        dirs.Add(new Vector2(1, 1));
+        dirs.Add(new Vector2(-1, 1));
+        dirs.Add(new Vector2(-1, -1));
+        dirs.Add(new Vector2(1, -1));
+
+        int directions = 1;
+        if (value == 2 || value == 3)
+            directions = 2;
+        if (value == 4 || value == 5)
+            directions = 4;
+        if (value == 6)
+            directions = 8;
+        
+        for (int i = 0; i < directions; i++)
         {
-            List<Enemy> enemies = Game.Instance.Enemies;
-            foreach (Enemy enemy in enemies)
+            Vector2 grid = pos + dirs[i];
+            bool hit = false;
+            while (Game.Instance.InBounds(grid))
             {
-                if (enemy.GridPos == grid)
+                List<Enemy> enemies = Game.Instance.Enemies;
+                foreach (Enemy enemy in enemies)
                 {
-                    enemy.OnHit(BulletDamage(value), ModManager.ModTypes.Bullet);
-                    //hit = true;
-                    break;
+                    if (enemy.GridPos == grid)
+                    {
+                        enemy.OnHit(BulletDamage(value), ModManager.ModTypes.Bullet);
+                    }
                 }
+                grid += dirs[i];
             }
-
-            if (hit)
-                break;
-
-            grid += forward;
+            
+            Particles bulletParticles = ModManager.Instance.BulletParticles.Instance<Particles>();
+            Game.Instance.AddChild(bulletParticles);
+            bulletParticles.GlobalPosition(pos.To3D());
+            Vector2 dir = new Vector2(-dirs[i].x, dirs[i].y);
+            bulletParticles.GlobalRotate(Vector3.Up, dir.Angle() - Mathf.Pi * 0.5f);
+        
+            // change colour
+            SpatialMaterial mat = bulletParticles.MaterialOverride as SpatialMaterial;
+            mat = mat.Duplicate() as SpatialMaterial;
+            bulletParticles.MaterialOverride = mat;
+            mat.AlbedoColor = ModManager.Instance.ModColoursSecondary[Type];
+            bulletParticles.Emitting = true;
+            _prevBullets.Add(bulletParticles);
         }
-
-        Particles bulletParticles = ModManager.Instance.BulletParticles.Instance<Particles>();
-        Game.Instance.AddChild(bulletParticles);
-        bulletParticles.GlobalPosition(pos.To3D());
-        Vector2 dir = new Vector2(-forward.x, forward.y);
-        bulletParticles.GlobalRotate(Vector3.Up, dir.Angle() - Mathf.Pi * 0.5f);
-        
-        // change colour
-        SpatialMaterial mat = bulletParticles.MaterialOverride as SpatialMaterial;
-        mat = mat.Duplicate(false) as SpatialMaterial;
-        bulletParticles.MaterialOverride = mat;
-        mat.AlbedoColor = ModManager.Instance.ModColoursSecondary[Type];
-        
-        bulletParticles.Emitting = true;
     }
 
     private void Activate_Heal(Vector2 pos, Vector2 forward, int value)
     {
         Dice.Instance.Heal(HealAmount(value));
-        
-        // TODO: if 6, do some aoe damage.
+
+        if (value == 6)
+        {
+            Dice.Instance.SetMaxHealth(12);
+        }
     }
     
     private void Activate_Lightning(Vector2 gridPos, Vector2 forward, int value)
@@ -159,10 +185,48 @@ public class ModDice : Node
     {
         Game.Instance.OnCoinCollect(CoinAmount(value));
     }
+    
+    private void Activate_Freeze(Vector2 gridPos, Vector2 forward, int value)
+    {
+        List<Enemy> enemies = Game.Instance.Enemies;
+        float dist = 0;
+        int turns = 0;
+        bool killDamaged = false;
+        switch (value)
+        {
+            case 1: dist = 2.0f;
+                turns = 2;
+                break;
+            case 2: dist = 3.0f;
+                turns = 2;
+                break;
+            case 3: dist = 4.0f;
+                turns = 2;
+                break;
+            case 4: dist = 5.0f;
+                turns = 2;
+                break;
+            case 5: dist = 6.0f;
+                turns = 3;
+                break;
+            case 6: dist = 6.0f;
+                turns = 3;
+                killDamaged = true;
+                break;
+        }
+        
+        foreach (Enemy e1 in enemies)
+        {
+            if ((e1.GridPos - gridPos).Length() < dist)
+            {
+                e1.Freeze(turns, killDamaged);
+            }
+        }
+    }
 
     private int BulletDamage(int value)
     {
-        return value + 2;
+        return Mathf.Max(2, value);
     }
     
     private int HealAmount(int value)
@@ -172,10 +236,10 @@ public class ModDice : Node
     
     private int CoinAmount(int value)
     {
-        if (value == 1 || value == 2) return 1;
-        if (value == 3 || value == 4) return 2;
-        if (value == 5) return 3;
-        if (value == 6) return 6;
-        return 0;
+        // if (value == 1 || value == 2) return 1;
+        // if (value == 3 || value == 4) return 2;
+        // if (value == 5) return 3;
+        if (value == 6) return 10;
+        return value;
     }
 }

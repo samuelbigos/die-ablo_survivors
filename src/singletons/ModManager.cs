@@ -11,7 +11,7 @@ public class ModManager : Singleton<ModManager>
         Heal,
         Lightning,
         Coin,
-        //Freeze,
+        Freeze,
         //Explode,
         COUNT,
     }
@@ -26,14 +26,15 @@ public class ModManager : Singleton<ModManager>
     [Export] private Color _lightningColourSecondary;
     [Export] private Color _coinColour;
     [Export] private Color _coinColourSecondary;
-    // [Export] private Color _freezeColour;
+    [Export] private Color _freezeColour;
+    [Export] private Color _freezeColourSecondary;
     // [Export] private Color _explodeColour;
     
     [Export] private PackedScene _bulletScene;
     [Export] private PackedScene _healthScene;
     [Export] private PackedScene _lightningScene;
     [Export] private PackedScene _coinScene;
-    // [Export] private PackedScene _freezeScene;
+    [Export] private PackedScene _freezeScene;
     // [Export] private PackedScene _explodeScene;
 
     [Export] public PackedScene BulletParticles;
@@ -56,14 +57,15 @@ public class ModManager : Singleton<ModManager>
         ModColoursSecondary[ModTypes.Lightning] = _lightningColourSecondary;
         ModColours[ModTypes.Coin] = _coinColour;
         ModColoursSecondary[ModTypes.Coin] = _coinColourSecondary;
-        // ModColours[ModTypes.Freeze] = _freezeColour;
+        ModColours[ModTypes.Freeze] = _freezeColour;
+        ModColoursSecondary[ModTypes.Freeze] = _freezeColourSecondary;
         // ModColours[ModTypes.Explode] = _explodeColour;
         
         ModPickupScenes[ModTypes.Bullet] = _bulletScene;
         ModPickupScenes[ModTypes.Heal] = _healthScene;
         ModPickupScenes[ModTypes.Lightning] = _lightningScene;
         ModPickupScenes[ModTypes.Coin] = _coinScene;
-        // ModPickupScenes[ModTypes.Freeze] = _freezeScene;
+        ModPickupScenes[ModTypes.Freeze] = _freezeScene;
         // ModPickupScenes[ModTypes.Explode] = _explodeScene;
     }
 }

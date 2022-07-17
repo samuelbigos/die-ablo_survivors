@@ -17,6 +17,7 @@ public partial class Dice : GridObject
     [Export] private List<Mesh> _healMeshes;
     [Export] private List<Mesh> _lightningMeshes;
     [Export] private List<Mesh> _coinMeshes;
+    [Export] private List<Mesh> _freezeMeshes;
     
     [OnReadyGet] private Game _game;
     [OnReadyGet] private Camera _camera;
@@ -86,6 +87,9 @@ public partial class Dice : GridObject
                     break;
                 case ModManager.ModTypes.Coin:
                     _meshes[(ModManager.ModTypes) i] = _coinMeshes;
+                    break;
+                case ModManager.ModTypes.Freeze:
+                    _meshes[(ModManager.ModTypes) i] = _freezeMeshes;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -257,6 +261,7 @@ public partial class Dice : GridObject
         _faceValues[face] += 1;
         SetFace(face, _mods[face].Type, _faceValues[face]);
         UpdateIndicator();
+        Coins -= pickup.Cost;
         
         return true;
     }
@@ -280,5 +285,10 @@ public partial class Dice : GridObject
         }
 
         return Vector3.Zero;
+    }
+
+    public void SetMaxHealth(int value)
+    {
+        _maxHealth = value;
     }
 }

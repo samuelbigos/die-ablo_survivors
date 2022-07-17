@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/6.obj-72c739bfe97e72388e36e664bb55d399.mesh"
+
+[deps]
+
+files=[ "res://.import/6.obj-72c739bfe97e72388e36e664bb55d399.mesh" ]
+
+source_file="res://assets/mesh/mods/ice/flat/6.obj"
+dest_files=[ "res://.import/6.obj-72c739bfe97e72388e36e664bb55d399.mesh", "res://.import/6.obj-72c739bfe97e72388e36e664bb55d399.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

@@ -14,8 +14,8 @@ public partial class GridObject : MeshInstance
     
     public Action<GridObject> OnDestroyed;
     public Action<GridObject, int, ModManager.ModTypes> OnDamaged;
-    
-    private SpatialMaterial _defaultMaterial;
+
+    protected SpatialMaterial _defaultMaterial;
 
     protected int _health;
     protected Vector2 _gridPos;

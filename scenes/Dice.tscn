@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=40 format=2]
 
 [ext_resource path="res://assets/mesh/dice_faceless.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://assets/mesh/mods/bullet/6.obj" type="ArrayMesh" id=2]
@@ -33,6 +33,12 @@
 [ext_resource path="res://assets/mesh/mods/coin/4.obj" type="ArrayMesh" id=31]
 [ext_resource path="res://assets/mesh/mods/coin/2.obj" type="ArrayMesh" id=32]
 [ext_resource path="res://assets/mesh/mods/coin/5.obj" type="ArrayMesh" id=33]
+[ext_resource path="res://assets/mesh/mods/ice/4.obj" type="ArrayMesh" id=34]
+[ext_resource path="res://assets/mesh/mods/ice/6.obj" type="ArrayMesh" id=35]
+[ext_resource path="res://assets/mesh/mods/ice/3.obj" type="ArrayMesh" id=36]
+[ext_resource path="res://assets/mesh/mods/ice/5.obj" type="ArrayMesh" id=37]
+[ext_resource path="res://assets/mesh/mods/ice/2.obj" type="ArrayMesh" id=38]
+[ext_resource path="res://assets/mesh/mods/ice/1.obj" type="ArrayMesh" id=39]
 
 [node name="Dice" type="MeshInstance"]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
@@ -50,6 +56,7 @@ _bulletMeshes = [ ExtResource( 15 ), ExtResource( 14 ), ExtResource( 11 ), ExtRe
 _healMeshes = [ ExtResource( 20 ), ExtResource( 21 ), ExtResource( 19 ), ExtResource( 18 ), ExtResource( 16 ), ExtResource( 17 ) ]
 _lightningMeshes = [ ExtResource( 22 ), ExtResource( 25 ), ExtResource( 24 ), ExtResource( 26 ), ExtResource( 27 ), ExtResource( 23 ) ]
 _coinMeshes = [ ExtResource( 29 ), ExtResource( 32 ), ExtResource( 30 ), ExtResource( 31 ), ExtResource( 33 ), ExtResource( 28 ) ]
+_freezeMeshes = [ ExtResource( 39 ), ExtResource( 38 ), ExtResource( 36 ), ExtResource( 34 ), ExtResource( 37 ), ExtResource( 35 ) ]
 
 [node name="0" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0 )

@@ -2,13 +2,14 @@
 
 [ext_resource path="res://assets/mats/enemy.material" type="Material" id=1]
 [ext_resource path="res://src/enemies/Enemy.cs" type="Script" id=2]
-[ext_resource path="res://assets/mesh/enemies/spiyki.obj" type="ArrayMesh" id=3]
+[ext_resource path="res://assets/mesh/enemies/squari.obj" type="ArrayMesh" id=3]
 
 [node name="Spiyki" type="MeshInstance"]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -0.0308619, 0 )
 material_override = ExtResource( 1 )
 mesh = ExtResource( 3 )
 material/0 = null
 script = ExtResource( 2 )
-_color = Color( 1, 0, 0, 1 )
-_maxHealth = 3
+_color = Color( 0.552941, 0, 0.752941, 1 )
+_damage = 2
+_maxHealth = 5
