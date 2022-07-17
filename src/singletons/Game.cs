@@ -19,6 +19,7 @@ public partial class Game : Singleton<Game>
     public static Action DoPostTurn;
     
     public List<Enemy> Enemies => _enemies;
+    public Camera Camera => _camera;
     
     [OnReadyGet] private Dice _dice;
     [OnReadyGet] private DiceIndicator _diceIndicator;
@@ -35,7 +36,6 @@ public partial class Game : Singleton<Game>
     private int _turnCounter;
     private bool _gameOver;
     private int _lastSpawnedPickup;
-    private int _coins;
 
     [OnReady]
     private void Ready()
@@ -171,7 +171,7 @@ public partial class Game : Singleton<Game>
     {
         OneUp oneUp = _oneUpScene.Instance<OneUp>();
         AddChild(oneUp);
-        oneUp.Init(gridPos);
+        oneUp.Init(gridPos, 50);
         _lastSpawnedPickup = _turnCounter;
     }
 
@@ -208,7 +208,7 @@ public partial class Game : Singleton<Game>
 
     public void OnCoinCollect(int amount)
     {
-        _coins += amount;
+        _dice.Coins++;
         FloatingText floatingText = _floatingText.Instance<FloatingText>();
         _canvas.AddChild(floatingText);
         string text = $"+{amount}";

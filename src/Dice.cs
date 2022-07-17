@@ -34,6 +34,8 @@ public partial class Dice : GridObject
     private Quat _rot;
     private Vector2 _forward;
     
+    public int Coins;
+    
     private int _topFace;
     private int _bottomFace;
     private int _rightFace;
@@ -247,6 +249,9 @@ public partial class Dice : GridObject
     {
         int face = _bottomFace;
         if (_faceValues[face] == 6)
+            return false;
+
+        if (Coins < pickup.Cost)
             return false;
         
         _faceValues[face] += 1;

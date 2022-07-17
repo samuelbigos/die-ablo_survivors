@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://assets/mesh/mods/one_up.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://src/OneUp.cs" type="Script" id=2]
 [ext_resource path="res://assets/mats/mod_pickup.material" type="Material" id=3]
+[ext_resource path="res://scenes/gui/FloatingText.tscn" type="PackedScene" id=4]
 
 [sub_resource type="SpatialMaterial" id=2]
 
@@ -13,6 +14,7 @@ size = Vector2( 1, 1 )
 script = ExtResource( 2 )
 Mesh1Path = NodePath("MeshInstance")
 Mesh2Path = NodePath("MeshInstance2")
+_floatingTextScene = ExtResource( 4 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 0.798546, 0, 0, 0, 1, 0, 0, 0, 0.798546, 0, -0.497, 0 )
@@ -22,6 +24,7 @@ material/0 = null
 
 [node name="MeshInstance2" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.499, 0 )
+visible = false
 material_override = SubResource( 2 )
 mesh = SubResource( 1 )
 material/0 = null
