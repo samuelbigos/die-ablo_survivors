@@ -5,31 +5,30 @@ using System.Collections.Generic;
 public class ModDice : Node
 {
     public ModManager.ModTypes Type;
-    public int Face;
 
-    public ModDice(ModManager.ModTypes type, int face)
+    public ModDice(ModManager.ModTypes type)
     {
         Type = type;
-        Face = face;
     }
 
-    public void Activate(Vector2 pos, Vector2 forward)
+    public void Activate(Vector2 pos, Vector2 forward, int value)
     {
         switch (Type)
         {
             case ModManager.ModTypes.Number:
                 break;
             case ModManager.ModTypes.Bullet:
-                Activate_Bullet(pos, forward);
+                Activate_Bullet(pos, forward, value);
                 break;
             case ModManager.ModTypes.Heal:
-                Activate_Heal(pos, forward);
+                Activate_Heal(pos, forward, value);
                 break;
             case ModManager.ModTypes.Lightning:
-                Activate_Lightning(pos, forward);
+                Activate_Lightning(pos, forward, value);
                 break;
-            // case ModManager.ModTypes.Coin:
-            //     break;
+            case ModManager.ModTypes.Coin:
+                Activate_Coin(pos, forward, value);
+                break;
             // case ModManager.ModTypes.Freeze:
             //     break;
             // case ModManager.ModTypes.Explode:
@@ -39,7 +38,7 @@ public class ModDice : Node
         }
     }
 
-    private void Activate_Bullet(Vector2 pos, Vector2 forward)
+    private void Activate_Bullet(Vector2 pos, Vector2 forward, int value)
     {
         Vector2 grid = pos + forward;
         bool hit = false;
@@ -50,7 +49,7 @@ public class ModDice : Node
             {
                 if (enemy.GridPos == grid)
                 {
-                    enemy.OnHit(BulletDamage(), ModManager.ModTypes.Bullet);
+                    enemy.OnHit(BulletDamage(value), ModManager.ModTypes.Bullet);
                     //hit = true;
                     break;
                 }
@@ -77,37 +76,37 @@ public class ModDice : Node
         bulletParticles.Emitting = true;
     }
 
-    private void Activate_Heal(Vector2 pos, Vector2 forward)
+    private void Activate_Heal(Vector2 pos, Vector2 forward, int value)
     {
-        Dice.Instance.Heal(HealAmount());
+        Dice.Instance.Heal(HealAmount(value));
         
         // TODO: if 6, do some aoe damage.
     }
     
-    private void Activate_Lightning(Vector2 gridPos, Vector2 forward)
+    private void Activate_Lightning(Vector2 gridPos, Vector2 forward, int value)
     {
         List<Enemy> enemies = Game.Instance.Enemies;
         float dist = 0;
         bool chain = false;
         int damage = 1;
-        switch (Face)
+        switch (value)
         {
-            case 0: dist = 2.5f;
+            case 1: dist = 2.5f;
                 damage = 1;
                 break;
-            case 1: dist = 3.0f;
+            case 2: dist = 3.0f;
                 damage = 1;
-                break;
-            case 2: dist = 3.5f;
-                damage = 2;
                 break;
             case 3: dist = 3.5f;
                 damage = 2;
                 break;
-            case 4: dist = 4.0f;
-                damage = 3;
+            case 4: dist = 3.5f;
+                damage = 2;
                 break;
             case 5: dist = 4.0f;
+                damage = 3;
+                break;
+            case 6: dist = 4.0f;
                 chain = true;
                 damage = 3;
                 break;
@@ -156,13 +155,27 @@ public class ModDice : Node
         }
     }
 
-    private int BulletDamage()
+    private void Activate_Coin(Vector2 gridPos, Vector2 forward, int value)
     {
-        return Face + 3;
+        Game.Instance.OnCoinCollect(CoinAmount(value));
+    }
+
+    private int BulletDamage(int value)
+    {
+        return value + 2;
     }
     
-    private int HealAmount()
+    private int HealAmount(int value)
     {
-        return (Face + 2) / 2;
+        return (value + 1) / 2;
+    }
+    
+    private int CoinAmount(int value)
+    {
+        if (value == 1 || value == 2) return 1;
+        if (value == 3 || value == 4) return 2;
+        if (value == 5) return 3;
+        if (value == 6) return 6;
+        return 0;
     }
 }

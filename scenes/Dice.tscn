@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://assets/mesh/dice_faceless.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://assets/mesh/mods/bullet/6.obj" type="ArrayMesh" id=2]
@@ -27,6 +27,12 @@
 [ext_resource path="res://assets/mesh/mods/lightning/2.obj" type="ArrayMesh" id=25]
 [ext_resource path="res://assets/mesh/mods/lightning/4.obj" type="ArrayMesh" id=26]
 [ext_resource path="res://assets/mesh/mods/lightning/5.obj" type="ArrayMesh" id=27]
+[ext_resource path="res://assets/mesh/mods/coin/6.obj" type="ArrayMesh" id=28]
+[ext_resource path="res://assets/mesh/mods/coin/1.obj" type="ArrayMesh" id=29]
+[ext_resource path="res://assets/mesh/mods/coin/3.obj" type="ArrayMesh" id=30]
+[ext_resource path="res://assets/mesh/mods/coin/4.obj" type="ArrayMesh" id=31]
+[ext_resource path="res://assets/mesh/mods/coin/2.obj" type="ArrayMesh" id=32]
+[ext_resource path="res://assets/mesh/mods/coin/5.obj" type="ArrayMesh" id=33]
 
 [node name="Dice" type="MeshInstance"]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
@@ -187,5 +193,47 @@ material/0 = null
 visible = false
 material_override = ExtResource( 10 )
 mesh = ExtResource( 23 )
+skeleton = NodePath("../Heal6")
+material/0 = null
+
+[node name="Coin1" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 29 )
+skeleton = NodePath("../Heal6")
+material/0 = null
+
+[node name="Coin2" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 32 )
+skeleton = NodePath("../Heal6")
+material/0 = null
+
+[node name="Coin3" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 30 )
+skeleton = NodePath("../Heal6")
+material/0 = null
+
+[node name="Coin4" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 31 )
+skeleton = NodePath("../Heal6")
+material/0 = null
+
+[node name="Coin5" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 33 )
+skeleton = NodePath("../Heal6")
+material/0 = null
+
+[node name="Coin6" type="MeshInstance" parent="."]
+visible = false
+material_override = ExtResource( 10 )
+mesh = ExtResource( 28 )
 skeleton = NodePath("../Heal6")
 material/0 = null

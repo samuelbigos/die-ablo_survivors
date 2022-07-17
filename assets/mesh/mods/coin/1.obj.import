@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/1.obj-cf09038c91cfbfbbab394eca3ae6af69.mesh"
+
+[deps]
+
+files=[ "res://.import/1.obj-cf09038c91cfbfbbab394eca3ae6af69.mesh" ]
+
+source_file="res://assets/mesh/mods/coin/1.obj"
+dest_files=[ "res://.import/1.obj-cf09038c91cfbfbbab394eca3ae6af69.mesh", "res://.import/1.obj-cf09038c91cfbfbbab394eca3ae6af69.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

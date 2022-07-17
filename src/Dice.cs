@@ -35,6 +35,8 @@ public partial class Dice : GridObject
     private int _frontFace;
     private int _backFace;
 
+    private int[] _faceValues = new[] {1, 2, 3, 4, 5, 6};
+
     private Dictionary<int, ModDice> _mods = new();
     private Dictionary<ModManager.ModTypes, List<MeshInstance>> _faces = new();
     
@@ -48,12 +50,12 @@ public partial class Dice : GridObject
         _indicator = GetNode<DiceIndicator>(_indicatorPath);
         
         _rot = GlobalTransform.basis.RotationQuat();
-        _mods[0] = new ModDice(ModManager.ModTypes.Number, 0);
-        _mods[1] = new ModDice(ModManager.ModTypes.Number, 0);
-        _mods[2] = new ModDice(ModManager.ModTypes.Number, 0);
-        _mods[3] = new ModDice(ModManager.ModTypes.Number, 0);
-        _mods[4] = new ModDice(ModManager.ModTypes.Number, 0);
-        _mods[5] = new ModDice(ModManager.ModTypes.Number, 0);
+        _mods[0] = new ModDice(ModManager.ModTypes.Number);
+        _mods[1] = new ModDice(ModManager.ModTypes.Number);
+        _mods[2] = new ModDice(ModManager.ModTypes.Number);
+        _mods[3] = new ModDice(ModManager.ModTypes.Number);
+        _mods[4] = new ModDice(ModManager.ModTypes.Number);
+        _mods[5] = new ModDice(ModManager.ModTypes.Number);
         
         _instance = this;
 
@@ -171,7 +173,7 @@ public partial class Dice : GridObject
     {
         base.DoPreTurn();
         
-        _mods[_bottomFace].Activate(_gridPos, _forward);
+        _mods[_bottomFace].Activate(_gridPos, _forward, _faceValues[_bottomFace]);
     }
 
     protected override void DoTurn()
@@ -190,14 +192,14 @@ public partial class Dice : GridObject
             _mods[_frontFace].Type,
             _mods[_leftFace].Type,
         };
-        int[] faces = new int[4]
+        int[] faceValues = new int[4]
         {
-            _backFace,
-            _rightFace,
-            _frontFace,
-            _leftFace,
+            _faceValues[_backFace],
+            _faceValues[_rightFace],
+            _faceValues[_frontFace],
+            _faceValues[_leftFace],
         };
-        _indicator.UpdateSides(types, faces);
+        _indicator.UpdateSides(types, faceValues);
     }
 
     public void Heal(int amount)
@@ -211,16 +213,30 @@ public partial class Dice : GridObject
         int face = _bottomFace;
         SetFaceVisible(face, false);
         
-        ModDice mod = new ModDice(pickup.Type, face);
-        mod.Activate(_gridPos, _forward);
+        ModDice mod = new ModDice(pickup.Type);
+        mod.Activate(_gridPos, _forward, _faceValues[_bottomFace]);
         _mods[face] = mod;
         
         SetFaceVisible(face, true);
     }
+    
+    public bool OnOneUp(OneUp pickup)
+    {
+        int face = _bottomFace;
+        if (_faceValues[face] == 6)
+            return false;
+        
+        SetFaceVisible(face, false);
+        _faceValues[face] += 1;
+        SetFaceVisible(face, true);
+        
+        UpdateIndicator();
+        return true;
+    }
 
     private void SetFaceVisible(int face, bool visible)
     {
-        _faces[_mods[face].Type][face].Visible = visible;
+        _faces[_mods[face].Type][_faceValues[face] - 1].Visible = visible;
     }
     
     private Vector3 FaceDirection(int face, Basis basis)

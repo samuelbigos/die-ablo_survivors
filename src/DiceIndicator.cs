@@ -16,6 +16,7 @@ public partial class DiceIndicator : Spatial
     [Export] private List<Mesh> _bulletMeshes;
     [Export] private List<Mesh> _healMeshes;
     [Export] private List<Mesh> _lightningMeshes;
+    [Export] private List<Mesh> _coinMeshes;
     
     private Dictionary<ModManager.ModTypes, List<Mesh>> _meshes = new();
     
@@ -40,6 +41,9 @@ public partial class DiceIndicator : Spatial
                 case ModManager.ModTypes.Lightning:
                     _meshes[(ModManager.ModTypes) i] = _lightningMeshes;
                     break;
+                case ModManager.ModTypes.Coin:
+                    _meshes[(ModManager.ModTypes) i] = _coinMeshes;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -62,14 +66,21 @@ public partial class DiceIndicator : Spatial
     public void UpdateSides(ModManager.ModTypes[] types, int[] values)
     {
         Visible = true;
-        _top.Mesh = _meshes[types[0]][values[0]];
-        _right.Mesh = _meshes[types[1]][values[1]];
-        _bottom.Mesh = _meshes[types[2]][values[2]];
-        _left.Mesh = _meshes[types[3]][values[3]];
+        _top.Mesh = _meshes[types[0]][values[0] - 1];
+        _right.Mesh = _meshes[types[1]][values[1] - 1];
+        _bottom.Mesh = _meshes[types[2]][values[2] - 1];
+        _left.Mesh = _meshes[types[3]][values[3] - 1];
 
         for (int i = 0; i < 4; i++)
         {
-            _shaders[i].SetShaderParam("u_col", ModManager.Instance.ModColoursSecondary[types[i]]);
+            if (types[i] == ModManager.ModTypes.Number)
+            {
+                _shaders[i].SetShaderParam("u_col", ModManager.Instance.ModColours[types[i]]);
+            }
+            else
+            {
+                _shaders[i].SetShaderParam("u_col", ModManager.Instance.ModColoursSecondary[types[i]]);
+            }
         }
     }
 }

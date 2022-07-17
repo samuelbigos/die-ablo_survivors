@@ -9,7 +9,7 @@
 [sub_resource type="PlaneMesh" id=1]
 size = Vector2( 1, 1 )
 
-[node name="BulletModPickup" type="Spatial"]
+[node name="LightningModPickup" type="Spatial"]
 script = ExtResource( 2 )
 Mesh1Path = NodePath("MeshInstance")
 Mesh2Path = NodePath("MeshInstance2")

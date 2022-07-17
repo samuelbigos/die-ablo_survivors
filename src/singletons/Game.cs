@@ -12,6 +12,7 @@ public partial class Game : Singleton<Game>
 
     [Export] private List<PackedScene> _enemyScenes;
     [Export] private PackedScene _floatingText;
+    [Export] private PackedScene _oneUpScene;
     
     public static Action DoPreTurn;
     public static Action DoTurn;
@@ -34,6 +35,7 @@ public partial class Game : Singleton<Game>
     private int _turnCounter;
     private bool _gameOver;
     private int _lastSpawnedPickup;
+    private int _coins;
 
     [OnReady]
     private void Ready()
@@ -77,9 +79,25 @@ public partial class Game : Singleton<Game>
         {
             SpawnEnemy();
         }
+
+        if (_turnCounter % 30 == 0)
+        {
+            SpawnOneUp(RandPointOnEdge());
+        }
     }
 
     private void SpawnEnemy()
+    {
+        Vector2 pos = RandPointOnEdge();
+        Enemy enemy = _enemyScenes[0].Instance<Enemy>();
+        AddChild(enemy);
+        _enemies.Add(enemy);
+        enemy.Init(pos);
+        enemy.OnDestroyed += OnGridObjectDestroyed;
+        enemy.OnDamaged += OnGridObjectDamaged;
+    }
+
+    private Vector2 RandPointOnEdge()
     {
         Vector2 pos = Vector2.Zero;
         uint rand4 = Utils.RNG.Randi() % 4;
@@ -91,15 +109,7 @@ public partial class Game : Singleton<Game>
             3 => new Vector2(Utils.RNG.Randi() % GridSize.x, GridSize.y - 1),
             _ => pos
         };
-
-        //pos = new Vector2(15, 15);
-
-        Enemy enemy = _enemyScenes[0].Instance<Enemy>();
-        AddChild(enemy);
-        _enemies.Add(enemy);
-        enemy.Init(pos);
-        enemy.OnDestroyed += OnGridObjectDestroyed;
-        enemy.OnDamaged += OnGridObjectDamaged;
+        return pos;
     }
 
     private void TrySpawnPickup(Vector2 gridPos, ModManager.ModTypes type)
@@ -110,6 +120,8 @@ public partial class Game : Singleton<Game>
             SpawnPickup(gridPos, ModManager.ModTypes.Bullet);
             SpawnPickup(gridPos + Vector2.Up, ModManager.ModTypes.Heal);
             SpawnPickup(gridPos + Vector2.Up * 2.0f, ModManager.ModTypes.Lightning);
+            SpawnPickup(gridPos + Vector2.Up * 3.0f, ModManager.ModTypes.Coin);
+            SpawnOneUp(gridPos + Vector2.Right);
         }
         
         spawn = 10;
@@ -155,6 +167,14 @@ public partial class Game : Singleton<Game>
         _lastSpawnedPickup = _turnCounter;
     }
 
+    private void SpawnOneUp(Vector2 gridPos)
+    {
+        OneUp oneUp = _oneUpScene.Instance<OneUp>();
+        AddChild(oneUp);
+        oneUp.Init(gridPos);
+        _lastSpawnedPickup = _turnCounter;
+    }
+
     public Vector3 GridToWorld(Vector2 gridPos)
     {
         return (gridPos * CellSize).To3D();
@@ -184,6 +204,15 @@ public partial class Game : Singleton<Game>
         _canvas.AddChild(floatingText);
         string text = $"+{amount}";
         floatingText.Init(_camera, dice, text, ModManager.Instance.ModColours[ModManager.ModTypes.Heal]);
+    }
+
+    public void OnCoinCollect(int amount)
+    {
+        _coins += amount;
+        FloatingText floatingText = _floatingText.Instance<FloatingText>();
+        _canvas.AddChild(floatingText);
+        string text = $"+{amount}";
+        floatingText.Init(_camera, _dice, text, ModManager.Instance.ModColours[ModManager.ModTypes.Coin]);
     }
     
     private void OnGridObjectDestroyed(GridObject obj)
