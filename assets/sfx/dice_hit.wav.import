@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/dice_hit.wav-68cd6a7177fb2ba7e4de583becf0ef57.sample"
+
+[deps]
+
+source_file="res://assets/sfx/dice_hit.wav"
+dest_files=[ "res://.import/dice_hit.wav-68cd6a7177fb2ba7e4de583becf0ef57.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

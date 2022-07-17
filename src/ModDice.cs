@@ -48,6 +48,8 @@ public class ModDice : Node
 
     private void Activate_Bullet(Vector2 pos, Vector2 forward, int value)
     {
+        Dice.Instance._bulletSfx.Play();
+        
         List<Vector2> dirs = new();
         dirs.Add(forward);
         dirs.Add(-forward);
@@ -179,11 +181,19 @@ public class ModDice : Node
                 vfx.P2 = e1e2.Item2;
             }
         }
+
+        if (hit.Count > 0)
+        {
+            Dice.Instance._lightningSfx.Play();
+        }
     }
 
     private void Activate_Coin(Vector2 gridPos, Vector2 forward, int value)
     {
-        Game.Instance.OnCoinCollect(CoinAmount(value));
+        Dice.Instance._coinSfx.Play();
+            
+        if (Game.Instance.Enemies.Count > 1)
+            Game.Instance.OnCoinCollect(CoinAmount(value));
     }
     
     private void Activate_Freeze(Vector2 gridPos, Vector2 forward, int value)
@@ -214,13 +224,20 @@ public class ModDice : Node
                 killDamaged = true;
                 break;
         }
-        
+
+        bool hit = false;
         foreach (Enemy e1 in enemies)
         {
             if ((e1.GridPos - gridPos).Length() < dist)
             {
                 e1.Freeze(turns, killDamaged);
+                hit = true;
             }
+        }
+        
+        if (hit)
+        {
+            Dice.Instance._freezeSfx.Play();
         }
     }
 

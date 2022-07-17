@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://assets/mesh/dice_faceless.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://assets/mesh/mods/bullet/6.obj" type="ArrayMesh" id=2]
@@ -39,6 +39,11 @@
 [ext_resource path="res://assets/mesh/mods/ice/5.obj" type="ArrayMesh" id=37]
 [ext_resource path="res://assets/mesh/mods/ice/2.obj" type="ArrayMesh" id=38]
 [ext_resource path="res://assets/mesh/mods/ice/1.obj" type="ArrayMesh" id=39]
+[ext_resource path="res://assets/sfx/freeze2.wav" type="AudioStream" id=40]
+[ext_resource path="res://assets/sfx/heal.wav" type="AudioStream" id=41]
+[ext_resource path="res://assets/sfx/shoot.wav" type="AudioStream" id=42]
+[ext_resource path="res://assets/sfx/coin.wav" type="AudioStream" id=43]
+[ext_resource path="res://assets/sfx/lightning.wav" type="AudioStream" id=44]
 
 [node name="Dice" type="MeshInstance"]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
@@ -48,6 +53,11 @@ material/0 = null
 script = ExtResource( 3 )
 _color = Color( 1, 1, 1, 1 )
 _maxHealth = 6
+BulletSfxPath = NodePath("SFXBullet")
+LightningSfxPath = NodePath("SFXLightning")
+HealSfxPath = NodePath("SFXHeal")
+CoinSfxPath = NodePath("SFXCoin")
+FreezeSfxPath = NodePath("SFXFreeze")
 GamePath = NodePath("..")
 CameraPath = NodePath("../Camera")
 _moveTime = 0.5
@@ -92,3 +102,18 @@ material/0 = null
 material_override = ExtResource( 10 )
 mesh = ExtResource( 7 )
 material/0 = null
+
+[node name="SFXBullet" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 42 )
+
+[node name="SFXLightning" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 44 )
+
+[node name="SFXHeal" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 41 )
+
+[node name="SFXCoin" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 43 )
+
+[node name="SFXFreeze" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 40 )

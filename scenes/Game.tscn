@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=2]
+[gd_scene load_steps=76 format=2]
 
 [ext_resource path="res://scenes/Dice.tscn" type="PackedScene" id=1]
 [ext_resource path="res://default_env.tres" type="Environment" id=2]
@@ -63,6 +63,16 @@
 [ext_resource path="res://assets/mats/enemy_frozen.material" type="Material" id=61]
 [ext_resource path="res://scenes/enemies/Squari.tscn" type="PackedScene" id=62]
 [ext_resource path="res://scenes/enemies/Tauri.tscn" type="PackedScene" id=63]
+[ext_resource path="res://assets/sfx/pickup.wav" type="AudioStream" id=64]
+[ext_resource path="res://assets/sfx/move.wav" type="AudioStream" id=65]
+[ext_resource path="res://assets/sfx/e2_hit.wav" type="AudioStream" id=66]
+[ext_resource path="res://assets/sfx/dice_hit.wav" type="AudioStream" id=67]
+[ext_resource path="res://assets/sfx/pickup2.wav" type="AudioStream" id=68]
+[ext_resource path="res://assets/sfx/e1_hit.wav" type="AudioStream" id=69]
+[ext_resource path="res://assets/sfx/e3_hit.wav" type="AudioStream" id=70]
+[ext_resource path="res://assets/sfx/e3_destroy.wav" type="AudioStream" id=71]
+[ext_resource path="res://assets/sfx/e1_destroy.wav" type="AudioStream" id=72]
+[ext_resource path="res://assets/sfx/e2_destroy.wav" type="AudioStream" id=73]
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_unshaded = true
@@ -82,6 +92,17 @@ CameraPath = NodePath("Camera")
 CanvasPath = NodePath("CanvasLayer")
 TurnsCounterPath = NodePath("CanvasLayer/Control/VBoxContainer/TurnsContainer/MarginContainer/Turns")
 CoinsCounterPath = NodePath("CanvasLayer/Control/VBoxContainer/CoinsContainer/MarginContainer/Coins")
+WaveLabelPath = NodePath("CanvasLayer/Control/Wave/Waves")
+E1HitSfxPath = NodePath("SFXEnemyHit1")
+E2HitSfxPath = NodePath("SFXEnemyHit2")
+E3HitSfxPath = NodePath("SFXEnemyHit3")
+E1DestroySfxPath = NodePath("SFXEnemyDestroy1")
+E2DestroySfxPath = NodePath("SFXEnemyDestroy2")
+E3DestroySfxPath = NodePath("SFXEnemyDestroy3")
+DiceHitSfxPath = NodePath("SFXDiceHit")
+MoveSfxPath = NodePath("SFXStep")
+ModSfxPath = NodePath("SFXPickupMod")
+OneUpSfxPath = NodePath("SFXOneUp")
 FpsPath = NodePath("CanvasLayer/Control/Debug/FPS")
 VertsPath = NodePath("CanvasLayer/Control/Debug/Verts")
 DrawsPath = NodePath("CanvasLayer/Control/Debug/Draws")
@@ -182,7 +203,7 @@ material/0 = null
 
 [node name="Dice" parent="." instance=ExtResource( 1 )]
 material_override = SubResource( 2 )
-_start = Vector2( 18, 18 )
+_start = Vector2( 16, 16 )
 _indicatorPath = NodePath("../DiceIndicator")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -190,6 +211,29 @@ _indicatorPath = NodePath("../DiceIndicator")
 [node name="Control" type="Control" parent="CanvasLayer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+
+[node name="Wave" type="MarginContainer" parent="CanvasLayer/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -239.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="Waves" type="Label" parent="CanvasLayer/Control/Wave"]
+visible = false
+margin_left = 10.0
+margin_top = 225.0
+margin_right = 1270.0
+margin_bottom = 256.0
+theme = ExtResource( 29 )
+custom_colors/font_color = Color( 0.172549, 0.172549, 0.172549, 1 )
+text = "Wave 1/10"
+align = 1
+valign = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control"]
 margin_right = 40.0
@@ -357,6 +401,24 @@ margin_right = 32.0
 margin_bottom = 32.0
 texture = ExtResource( 27 )
 
+[node name="10" type="TextureRect" parent="CanvasLayer/Control/HealthContainer/Health"]
+visible = false
+margin_right = 32.0
+margin_bottom = 32.0
+texture = ExtResource( 27 )
+
+[node name="11" type="TextureRect" parent="CanvasLayer/Control/HealthContainer/Health"]
+visible = false
+margin_right = 32.0
+margin_bottom = 32.0
+texture = ExtResource( 27 )
+
+[node name="12" type="TextureRect" parent="CanvasLayer/Control/HealthContainer/Health"]
+visible = false
+margin_right = 32.0
+margin_bottom = 32.0
+texture = ExtResource( 27 )
+
 [node name="Debug" type="VBoxContainer" parent="CanvasLayer/Control"]
 anchor_left = 1.0
 anchor_right = 1.0
@@ -379,3 +441,33 @@ margin_top = 36.0
 margin_right = 263.0
 margin_bottom = 50.0
 align = 2
+
+[node name="SFXStep" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 65 )
+
+[node name="SFXPickupMod" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 64 )
+
+[node name="SFXOneUp" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 68 )
+
+[node name="SFXEnemyHit1" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 69 )
+
+[node name="SFXEnemyHit2" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 66 )
+
+[node name="SFXEnemyHit3" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 70 )
+
+[node name="SFXEnemyDestroy1" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 72 )
+
+[node name="SFXEnemyDestroy2" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 73 )
+
+[node name="SFXEnemyDestroy3" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 71 )
+
+[node name="SFXDiceHit" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 67 )

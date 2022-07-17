@@ -7,7 +7,7 @@ public partial class GridObject : MeshInstance
     [Export] private Color _color;
     [Export] private int _damage = 1;
     [Export] protected int _maxHealth = 1;
-    [Export] private float _spawnDropTime = 0.5f;
+    [Export] private float _spawnDropTime = 1.0f;
 
     public int Damage => _damage;
     public Vector2 GridPos => _gridPos;

@@ -18,6 +18,12 @@ public partial class Dice : GridObject
     [Export] private List<Mesh> _lightningMeshes;
     [Export] private List<Mesh> _coinMeshes;
     [Export] private List<Mesh> _freezeMeshes;
+
+    [OnReadyGet] public AudioStreamPlayer2D _bulletSfx;
+    [OnReadyGet] public AudioStreamPlayer2D _lightningSfx;
+    [OnReadyGet] public AudioStreamPlayer2D _healSfx;
+    [OnReadyGet] public AudioStreamPlayer2D _coinSfx;
+    [OnReadyGet] public AudioStreamPlayer2D _freezeSfx;
     
     [OnReadyGet] private Game _game;
     [OnReadyGet] private Camera _camera;
@@ -27,6 +33,7 @@ public partial class Dice : GridObject
     public float Health => _health;
 
     public Action<Dice, int> OnHealed;
+    public Action OnCollectPickup;
     
     private DiceIndicator _indicator;
     private Queue<Vector2> _moves = new Queue<Vector2>();
@@ -236,6 +243,8 @@ public partial class Dice : GridObject
 
     public void Heal(int amount)
     {
+        _healSfx.Play();
+        
         _health = Mathf.Min(_health + amount, _maxHealth);
         OnHealed?.Invoke(this, amount);
     }
@@ -247,6 +256,7 @@ public partial class Dice : GridObject
         mod.Activate(_gridPos, _forward, _faceValues[_bottomFace]);
         _mods[face] = mod;
         SetFace(face, pickup.Type, _faceValues[face]);
+        OnCollectPickup?.Invoke();
     }
     
     public bool OnOneUp(OneUp pickup)

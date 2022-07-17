@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/e2_destroy.wav-1aee733539f59eb6edebb90523a64367.sample"
+
+[deps]
+
+source_file="res://assets/sfx/e2_destroy.wav"
+dest_files=[ "res://.import/e2_destroy.wav-1aee733539f59eb6edebb90523a64367.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

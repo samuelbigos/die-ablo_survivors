@@ -7,6 +7,8 @@ public partial class Enemy : GridObject
 {
     [Export] private bool _ranged = false;
     [Export] private int _range = 10;
+
+    public int Id;
     
     private bool _attacking;
     private Quat _rotStart;
